@@ -1,0 +1,69 @@
+# --- Secrets & environment ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.azure/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+
+# --- Node / frontend ---
+node_modules/
+.pnp/
+.pnp.js
+.vite/
+.next/
+.turbo/
+*.tsbuildinfo
+.eslintcache
+
+# Build output (frontend)
+frontend/dist/
+frontend/build/
+
+# --- Generated data ---
+# Synthetic datasets are reproducible from seed + manifest; don't version the output.
+data/generated/
+*.sqlite
+*.sqlite3
+*.db
+
+# --- Logs ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Editors & IDE ---
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
