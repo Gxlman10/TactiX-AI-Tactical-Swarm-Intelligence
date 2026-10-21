@@ -15,6 +15,7 @@ from tactix.domain.universe import Club, League, Player, StandingRow
 from tactix.persistence.database import build_engine, session_factory
 from tactix.persistence.leagues import add_league, get_league
 from tactix.persistence.models import ClubRecord, PlayerRecord
+from tactix.universe.generator import LeagueConfig, generate_league
 
 
 @pytest.fixture
@@ -226,3 +227,15 @@ def test_parent_delete_is_restricted(database):
         )
     with pytest.raises(IntegrityError), sessions.begin() as session:
         session.execute(text("DELETE FROM leagues WHERE id = 'l'"))
+
+
+def test_generated_leagues_round_trip_without_id_collisions(database):
+    engine, _ = database
+    sessions = session_factory(engine)
+    leagues = [generate_league(LeagueConfig(seed=seed)) for seed in (42, 43)]
+    with sessions.begin() as session:
+        for league in leagues:
+            add_league(session, league)
+    with sessions() as session:
+        for league in leagues:
+            assert get_league(session, league.id) == league
