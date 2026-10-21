@@ -31,7 +31,8 @@ The containerized backend uses the internal service address `db:5432`.
 
 ## Data model
 
-`leagues` owns `clubs`; `clubs` owns `players`. Foreign keys enforce ownership.
+`leagues` owns `clubs` and historical `fixtures`; `clubs` owns `players`.
+Composite foreign keys prevent fixture clubs from belonging to another league.
 IDs are globally unique within each table. Position columns preserve list order.
 Positions must be nonnegative and unique within their parent collection. Direct
 SQL deletion of a parent with children is rejected; ORM aggregate deletion uses
@@ -39,11 +40,15 @@ the explicitly configured delete-orphan cascade.
 Nested attributes, tactical identity, tendencies and player state use JSON.
 Names and ownership keys have dedicated relational columns.
 
-`add_league(session, league)` inserts a new roster. The caller controls commit
+`add_league(session, league)` inserts a roster with optional history. The caller controls commit
 and rollback; existing IDs raise an integrity error. `get_league` reconstructs
-the Pydantic contract, returning `None` for an unknown ID. This delivery supports
-roster insertion and retrieval. History, events and updates require later work.
-Nonempty history is rejected instead of silently discarded.
+the Pydantic contract, returning `None` for an unknown ID. Invalid scorer references
+and summaries that disagree with fixtures are rejected before insertion.
+Standings and head-to-head summaries are rebuilt from fixtures when reading,
+preventing divergent stored aggregates. Scorer metadata remains in JSON with
+application-level membership validation. The database enforces fixture ownership,
+nonnegative scores and ordering; cross-home/away appearance conflicts within a
+matchday are validated by the application. Events and updates require later work.
 
 ## PostgreSQL tests
 
@@ -59,6 +64,8 @@ Integration tests create and remove a unique schema. They verify migrations in
 both directions, roster equality, foreign keys, duplicate IDs and rollback.
 They also verify atomic failure partway through a roster, invalid list positions,
 restricted parent deletion, and a 10-club, 230-player league read in three queries.
+With history, the complete aggregate reads in four queries. Tests also cover
+historical ownership, aggregate deletion and migration preservation of old rosters.
 This query-count check does not measure latency or concurrent load. GitHub Actions
 provides PostgreSQL 16 and the test URL so integration tests run in CI.
 Without the test URL, PostgreSQL integration tests are skipped.

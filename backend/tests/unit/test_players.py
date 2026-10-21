@@ -119,7 +119,10 @@ def test_tendencies_explain_attributes_without_fabricating_history():
 
 def test_v1_output_is_preserved_and_v2_keeps_club_tactics():
     v1 = generate_league(LeagueConfig(generator_version="league-v1"))
-    v2 = generate_league()
+    v2 = generate_league(LeagueConfig(generator_version="league-v2"))
+    assert hashlib.sha256(v2.model_dump_json().encode()).hexdigest() == (
+        "2c76bcec82f9531e8c8161a6354e270b77b5190a9254661b766b81eab6d27ba5"
+    )
     assert v1.id == "f4d4f1c2-b820-54a1-b7ee-7caa477d44b9"
     assert hashlib.sha256(v1.model_dump_json().encode()).hexdigest() == (
         "83ae0ed2bfcdfbbee286304d0be66078a061e26de1faed167b25ad830f41acf7"

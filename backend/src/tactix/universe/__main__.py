@@ -14,7 +14,8 @@ def main() -> None:
     parser.add_argument("--seed", type=int)
     parser.add_argument("--clubs", type=int, dest="club_count")
     parser.add_argument("--season")
-    parser.add_argument("--generator-version", choices=("league-v1", "league-v2"))
+    parser.add_argument("--generator-version", choices=("league-v1", "league-v2", "league-v3"))
+    parser.add_argument("--matchdays", type=int, dest="history_matchdays")
     parser.add_argument("--output", type=Path, help="Write JSON to a new file instead of stdout")
     args = parser.parse_args()
     try:
@@ -25,7 +26,7 @@ def main() -> None:
         )
         overrides = {
             key: getattr(args, key)
-            for key in ("seed", "club_count", "season", "generator_version")
+            for key in ("seed", "club_count", "season", "generator_version", "history_matchdays")
             if getattr(args, key) is not None
         }
         config = LeagueConfig.model_validate(base.model_dump() | overrides)

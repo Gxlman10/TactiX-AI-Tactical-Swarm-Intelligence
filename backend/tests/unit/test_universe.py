@@ -101,7 +101,7 @@ def test_rating_variation_preserves_profile_and_description(seed):
         {"seed": True},
         {"seed": 2**63},
         {"season": "   "},
-        {"generator_version": "league-v3"},
+        {"generator_version": "league-v4"},
         {"unknown": 42},
     ],
 )

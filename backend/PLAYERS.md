@@ -7,8 +7,9 @@ uv run python -m tactix.universe --config ../data/scenarios/league-squads.json
 uv run python -m tactix.universe --seed 42 --clubs 10 --output ../data/generated/league-squads-42.json
 ```
 
-The output file must be new. `league-v2` is now the default; use the versioned
-manifest to make the choice explicit. The old `league-base.json` selects
+The output file must be new. The manifest selects `league-v2` for squads without
+history. The latest default, `league-v3`, also includes fixtures; see `HISTORY.md`.
+The old `league-base.json` selects
 `league-v1` and retains its original club-only output and identifiers.
 
 ## Squad construction

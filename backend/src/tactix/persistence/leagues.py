@@ -3,22 +3,45 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
-from tactix.domain.universe import Club, League, Player
-from tactix.persistence.models import ClubRecord, LeagueRecord, PlayerRecord
+from tactix.domain.universe import Club, Fixture, League, Player
+from tactix.persistence.models import ClubRecord, FixtureRecord, LeagueRecord, PlayerRecord
+from tactix.universe.history import validate_history
+from tactix.universe.standings import build_head_to_head, build_standings
 
 
 def add_league(session: Session, league: League) -> None:
-    """Insert a roster. The caller commits; duplicate IDs raise IntegrityError.
-
-    History belongs to a later migration and is rejected to prevent silent data loss.
-    """
-    if league.fixtures or league.standings or league.head_to_head:
-        raise ValueError("League history persistence is not implemented yet")
+    """Insert an aggregate atomically; validate derived summaries before adding it."""
+    validate_history(league)
     session.add(
         LeagueRecord(
             id=league.id,
             name=league.name,
             season=league.season,
+            has_history=bool(league.fixtures),
+            fixtures=[
+                FixtureRecord(
+                    id=f.id,
+                    league_id=league.id,
+                    position=i,
+                    matchday=f.matchday,
+                    home_club_id=f.home_club_id,
+                    away_club_id=f.away_club_id,
+                    home_goals=f.home_goals,
+                    away_goals=f.away_goals,
+                    details=f.model_dump(
+                        mode="json",
+                        exclude={
+                            "id",
+                            "matchday",
+                            "home_club_id",
+                            "away_club_id",
+                            "home_goals",
+                            "away_goals",
+                        },
+                    ),
+                )
+                for i, f in enumerate(league.fixtures)
+            ],
             clubs=[
                 ClubRecord(
                     id=club.id,
@@ -51,7 +74,7 @@ def get_league(session: Session, league_id: str) -> League | None:
     )
     if record is None:
         return None
-    return League(
+    league = League(
         id=record.id,
         name=record.name,
         season=record.season,
@@ -65,3 +88,25 @@ def get_league(session: Session, league_id: str) -> League | None:
             for club in record.clubs
         ],
     )
+    if record.has_history:
+        stored = session.scalars(
+            select(FixtureRecord)
+            .where(FixtureRecord.league_id == league_id)
+            .order_by(FixtureRecord.position)
+        ).all()
+        league.fixtures = [
+            Fixture(
+                id=f.id,
+                matchday=f.matchday,
+                home_club_id=f.home_club_id,
+                away_club_id=f.away_club_id,
+                home_goals=f.home_goals,
+                away_goals=f.away_goals,
+                **f.details,
+            )
+            for f in stored
+        ]
+        league.standings = build_standings(league.clubs, league.fixtures)
+        league.head_to_head = build_head_to_head(league.clubs, league.fixtures)
+        validate_history(league)
+    return league

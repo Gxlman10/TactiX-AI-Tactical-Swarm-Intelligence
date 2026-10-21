@@ -14,7 +14,7 @@ from sqlalchemy.exc import IntegrityError
 from tactix.domain.universe import Club, League, Player, StandingRow
 from tactix.persistence.database import build_engine, session_factory
 from tactix.persistence.leagues import add_league, get_league
-from tactix.persistence.models import ClubRecord, PlayerRecord
+from tactix.persistence.models import ClubRecord, FixtureRecord, LeagueRecord, PlayerRecord
 from tactix.universe.generator import LeagueConfig, generate_league
 
 
@@ -234,6 +234,7 @@ def test_generated_leagues_round_trip_without_id_collisions(database):
     sessions = session_factory(engine)
     leagues = [generate_league(LeagueConfig(seed=seed)) for seed in (42, 43)]
     leagues.append(generate_league(LeagueConfig(seed=42, generator_version="league-v1")))
+    leagues.append(generate_league(LeagueConfig(seed=42, generator_version="league-v2")))
     assert sum(len(club.squad) for club in leagues[0].clubs) == 230
     with sessions.begin() as session:
         for league in leagues:
@@ -241,3 +242,81 @@ def test_generated_leagues_round_trip_without_id_collisions(database):
     with sessions() as session:
         for league in leagues:
             assert get_league(session, league.id) == league
+
+
+def test_historical_aggregate_uses_four_queries(database):
+    engine, _ = database
+    sessions = session_factory(engine)
+    league = generate_league()
+    with sessions.begin() as session:
+        add_league(session, league)
+    queries = []
+
+    def capture(*args):
+        queries.append(args[2])
+
+    event.listen(engine, "before_cursor_execute", capture)
+    try:
+        with sessions() as session:
+            assert get_league(session, league.id) == league
+        assert len(queries) == 4
+    finally:
+        event.remove(engine, "before_cursor_execute", capture)
+
+
+def test_history_migration_preserves_existing_rosters(database):
+    engine, config = database
+    sessions = session_factory(engine)
+    league = generate_league(LeagueConfig(generator_version="league-v2"))
+    with sessions.begin() as session:
+        add_league(session, league)
+    command.downgrade(config, "70b4bceddc72")
+    command.upgrade(config, "head")
+    with sessions() as session:
+        assert get_league(session, league.id) == league
+
+
+def test_explicit_historical_aggregate_deletion_cascades(database):
+    engine, _ = database
+    sessions = session_factory(engine)
+    league = generate_league()
+    with sessions.begin() as session:
+        add_league(session, league)
+    with sessions.begin() as session:
+        session.delete(session.get(LeagueRecord, league.id))
+    with sessions() as session:
+        assert get_league(session, league.id) is None
+        assert session.get(FixtureRecord, league.fixtures[0].id) is None
+        assert session.get(ClubRecord, league.clubs[0].id) is None
+
+
+def test_fixture_cannot_reference_a_club_from_another_league(database):
+    engine, _ = database
+    sessions = session_factory(engine)
+    with sessions.begin() as session:
+        for key in ("one", "two"):
+            add_league(
+                session,
+                League(
+                    id=key,
+                    name=key,
+                    season="2026",
+                    clubs=[
+                        Club(id=key + "club", name=key),
+                    ],
+                ),
+            )
+    with pytest.raises(IntegrityError), sessions.begin() as session:
+        session.add(
+            FixtureRecord(
+                id="invalid",
+                league_id="one",
+                position=0,
+                matchday=1,
+                home_club_id="oneclub",
+                away_club_id="twoclub",
+                home_goals=0,
+                away_goals=0,
+                details={},
+            )
+        )

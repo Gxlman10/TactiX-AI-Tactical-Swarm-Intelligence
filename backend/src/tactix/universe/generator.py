@@ -5,10 +5,11 @@ import random
 from typing import Literal
 from uuid import NAMESPACE_URL, uuid5
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from tactix.domain.enums import BuildUpStyle
 from tactix.domain.universe import Club, League, TacticalIdentity
+from tactix.universe.history import generate_history
 from tactix.universe.players import generate_squad
 from tactix.universe.profiles import PROFILES
 
@@ -16,10 +17,11 @@ from tactix.universe.profiles import PROFILES
 class LeagueConfig(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
-    generator_version: Literal["league-v1", "league-v2"] = "league-v2"
+    generator_version: Literal["league-v1", "league-v2", "league-v3"] = "league-v3"
     seed: int = Field(default=42, ge=0, le=2**63 - 1)
     club_count: int = Field(default=10, ge=8, le=10)
     season: str = "2026/27"
+    history_matchdays: int = Field(default=12, ge=12, le=14)
 
     @field_validator("season")
     @classmethod
@@ -28,6 +30,12 @@ class LeagueConfig(BaseModel):
         if not value:
             raise ValueError("season must not be blank")
         return value
+
+    @model_validator(mode="after")
+    def validate_history_version(self) -> "LeagueConfig":
+        if self.generator_version != "league-v3" and self.history_matchdays != 12:
+            raise ValueError("Custom history_matchdays requires league-v3")
+        return self
 
 
 def describe_tactics(identity: TacticalIdentity) -> tuple[list[str], list[str]]:
@@ -73,17 +81,19 @@ def describe_tactics(identity: TacticalIdentity) -> tuple[list[str], list[str]]:
 
 
 def generate_league(config: LeagueConfig | None = None) -> League:
-    """Generate club identities, plus squads in league-v2. History stays separate.
+    """Generate versioned clubs, squads (v2+) and prior fixtures (v3).
 
     Per-club random streams preserve tactical ratings when expanding the same
     seed and season to nine or ten clubs. IDs namespace each configuration,
     preventing collisions when multiple generated leagues share one database.
     """
     config = config or LeagueConfig()
-    namespace = uuid5(
-        NAMESPACE_URL,
-        f"tactix:{config.generator_version}:{config.seed}:{config.season}:{config.club_count}",
+    identity_key = (
+        f"tactix:{config.generator_version}:{config.seed}:{config.season}:{config.club_count}"
     )
+    if config.generator_version == "league-v3":
+        identity_key += f":{config.history_matchdays}"
+    namespace = uuid5(NAMESPACE_URL, identity_key)
     clubs = []
     for profile in PROFILES[: config.club_count]:
         digest = hashlib.sha256(
@@ -117,8 +127,13 @@ def generate_league(config: LeagueConfig | None = None) -> League:
                 weaknesses=weaknesses,
             )
         )
-        if config.generator_version == "league-v2":
+        if config.generator_version != "league-v1":
             clubs[-1].squad = generate_squad(clubs[-1], config.seed)
-    return League(
+    league = League(
         id=str(namespace), name="TactiX Synthetic League", season=config.season, clubs=clubs
+    )
+    return (
+        generate_history(league, config.seed, config.history_matchdays)
+        if config.generator_version == "league-v3"
+        else league
     )
