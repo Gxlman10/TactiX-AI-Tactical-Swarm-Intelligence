@@ -1,0 +1,16 @@
+{
+  "league": {
+    "generator_version": "league-v3",
+    "seed": 42,
+    "club_count": 10,
+    "season": "2026/27",
+    "history_matchdays": 12
+  },
+  "match": {
+    "engine_version": "match-v1",
+    "seed": 42,
+    "duration_minutes": 90
+  },
+  "home": "Ashford",
+  "away": "Northbridge"
+}
