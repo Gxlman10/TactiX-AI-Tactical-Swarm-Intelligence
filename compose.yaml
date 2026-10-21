@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: tactix
       POSTGRES_DB: tactix
     ports:
-      - "5432:5432"
+      - "${TACTIX_POSTGRES_PORT:-5432}:5432"
     volumes:
       - tactix_pgdata:/var/lib/postgresql/data
     healthcheck:
