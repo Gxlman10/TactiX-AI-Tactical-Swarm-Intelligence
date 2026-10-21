@@ -47,16 +47,62 @@
 | Recuperación de fallos | **Agente caído → reporte parcial etiquetado** (tumbamos al Historian; el reporte sale y dice "contexto histórico no disponible") |
 | Clímax de la demo | **El párrafo que un solo agente no podría escribir**, armándose en vivo con la procedencia de cada agente |
 
-### Decisiones propuestas por defecto (confírmenlas o corríjanlas)
+### Stack y estructura — confirmados (propuesta del equipo del 20/10)
 
-Estas las elegí yo para no frenar; son fáciles de cambiar:
+El equipo trajo la propuesta de implementación; la evalué y **encaja con todo lo decidido**, y
+está mejor especificada que mis defaults. Se adopta tal cual.
 
-- **Repo:** monorepo (`backend/`, `frontend/`, `infra/`, `data/`, `docs/`).
-- **Transporte del stream en vivo:** Server-Sent Events (SSE) sobre HTTP (más simple que WebSocket para un flujo unidireccional servidor→cliente).
-- **Persistencia:** Azure Database for PostgreSQL (serverless/flexible). Supabase local solo para desarrollar rápido si hace falta.
-- **IaC:** Bicep para el despliegue en Azure.
-- **Modelo de Foundry:** GPT-4o (o el equivalente disponible en la suscripción); cliente intercambiable por si hay cuota/latencia.
-- **Nombres sintéticos:** mantener los que ya aparecen en el README (clubes tipo *Ashford*, *Northbridge*; jugador *Hartley*) para consistencia.
+**Stack**
+
+| Área | Tecnología | Función |
+|---|---|---|
+| Backend | Python + FastAPI | API y ejecución del sistema |
+| Validación | Pydantic | Contratos de eventos, métricas y respuestas de agentes |
+| Simulación | Python con semillas reproducibles | Liga, historial y partidos ficticios |
+| Métricas | Python determinista | Estadísticas + evidencia conservada |
+| Orquestación | Microsoft Agent Framework | Estado compartido, handoffs, coordinación |
+| Modelos | Microsoft Foundry | Interpretación táctica, narración, personalización |
+| Frontend | React + TypeScript + Vite | Modos analista y aficionado |
+| Comunicación | REST + SSE | Control del partido + actualizaciones en vivo |
+| Base de datos | PostgreSQL | Universo, eventos, métricas, ejecuciones |
+| Acceso a datos | SQLAlchemy + Alembic | Consultas y migraciones |
+| Despliegue | Docker + Azure Container Apps | Publicar la app (serverless, scale-to-zero) |
+| Persistencia nube | Azure Database for PostgreSQL | Datos de la demo |
+
+**Tooling:** uv (deps Python) · npm (frontend) · Ruff + ESLint + TypeScript (formato/estático) ·
+pytest (simulación, métricas, evidencia, recuperación) · Playwright (recorrido de la demo) ·
+Docker Compose (local reproducible) · GitHub Actions (CI + deploy) · GitHub Copilot · Azure CLI.
+
+**Estructura (monorepo)**
+
+```
+TactiX/
+├── backend/src/tactix/
+│   ├── domain/        # contratos y entidades (Pydantic)
+│   ├── universe/      # liga, jugadores, historial
+│   ├── simulation/    # eventos y reproducción del partido
+│   ├── metrics/       # estadísticas y evidencia
+│   ├── agents/        # especialistas: instrucciones, herramientas, contratos
+│   ├── workflows/     # coordinación, estado compartido, recuperación (checkpoints)
+│   ├── persistence/   # acceso a PostgreSQL (SQLAlchemy + Alembic)
+│   └── api/           # REST + SSE
+├── frontend/src/features/   # match · analyst · fan · preferences
+├── data/scenarios/    # escenarios sintéticos reproducibles (incluye el demo seed)
+├── infra/             # Azure (Bicep + Azure CLI)
+├── scripts/
+└── docs/              # interno, español
+```
+
+**Notas sobre la propuesta:**
+
+1. **Azure Functions fuera; solo Container Apps.** La propuesta consolida en Container Apps
+   (scale-to-zero ya es serverless). Menos superficie que mantener arriba 3 semanas. Functions
+   queda opcional si la ingesta lo pide.
+2. **`data/scenarios/` = el *demo seed*** que marqué: ahí vive el guion plantado de *Ashford*.
+3. **Frontend:** estado con **Zustand**, i18n con **react-i18next** (es/en).
+4. **Modelo de Foundry:** se elige al verificar disponibilidad/cuota/latencia en la cuenta; no
+   se entrena nada. Cliente de modelo intercambiable como respaldo.
+5. **Nombres sintéticos:** mantener los del README (*Ashford*, *Northbridge*, *Hartley*).
 
 ---
 
@@ -76,68 +122,140 @@ producen (trazabilidad).
 
 ## 3. Layer 1 — Universo sintético
 
+> El equipo pidió **más profundidad futbolística** para que las respuestas de los agentes no
+> salgan básicas. Esta sección y la §4 se ampliaron con eso en mente. Regla que no cambia:
+> todo es **dato sintético generado por el proyecto** y **determinista por seed**.
+
 ### Entidades
 
-- **League** — temporada, lista de clubes, calendario.
-- **Club** — nombre, ciudad, formación base (p. ej. 4-3-3), *perfil de estilo* (posesión vs
-  directo, altura de presión, agresividad), colores para la UI.
-- **Player** — nombre, posición, *perfil de atributos* 0–100 (pace, passing, finishing,
-  pressing, stamina, positioning) y *tendencias* (p. ej. "pierde el balón bajo presión en
-  medio campo", "remata desde el canal izquierdo").
-- **Fixture (histórico)** — partido ya jugado: marcador, stats agregadas, racha que dejó.
-- **Match (en vivo)** — el partido que se simula/reproduce.
-- **Event** — ver §4.
-- **Possession** — cadena de eventos de un mismo equipo con inicio, fin y desenlace.
+**League / Season**
+- Temporada, clubes, calendario (jornadas) y **tabla de posiciones** viva: PJ, G/E/P, GF/GC,
+  diferencia, puntos, forma (últimos 5: W/D/L), splits local/visitante.
+- Reglas de competición (puntos, desempates) para que la tabla sea coherente.
+
+**Club**
+- Identidad: nombre, ciudad, apodo, colores (para la UI).
+- **Identidad táctica:** formación(es) habitual(es) (4-3-3, 3-5-2…), estilo de construcción
+  (corto / directo / mixto), **altura de línea defensiva**, **intensidad de presión**, tempo,
+  amplitud, forma con/sin balón, fuerza a balón parado, filosofía del DT.
+- Rachas de temporada y fortalezas/debilidades agregadas (p. ej. "vulnerable en transición").
+
+**Player**
+- Ficha: nombre, dorsal, posición(es), rol, **pie preferido** (y pie malo 1–5), altura, edad.
+- **Atributos 0–100 por familia:**
+  - *Físico:* pace, aceleración, resistencia, fuerza, salto.
+  - *Técnico:* pase, pase largo, regate, control, centro, definición, tiro lejano, balón parado.
+  - *Mental:* posicionamiento, visión, compostura, decisión, agresividad, trabajo, marcaje.
+  - *Portero (si aplica):* reflejos, achique, manejo, juego aéreo, distribución.
+- **Tendencias** (lo que da textura a la narrativa): zonas de calor preferidas, acciones
+  favoritas ("remata desde el canal izquierdo"), debilidades explotables ("pierde el balón bajo
+  presión en medio campo"), rendimiento por estado del partido.
+- **Estado dinámico:** fatiga (la resistencia baja en el tramo final y afecta la ejecución),
+  moral/confianza, amonestaciones acumuladas y sanciones de la temporada.
+
+**Fixture (histórico)** — no solo el marcador: alineaciones y formaciones, goleadores con
+minuto, resumen de eventos clave, totales tipo xG, posesión, tiros, y la racha/patrón que dejó.
+
+**Head-to-head** — historial entre dos clubes: registro, tendencias del enfrentamiento, último
+resultado.
+
+**Match (en vivo)** — el partido que se simula/reproduce (ver §4).
+
+**Possession** — cadena de eventos de un mismo equipo, con fase y desenlace (ver §4).
 
 ### Generador
 
-- Determinista por **seed** → reproducible y testeable.
-- **Demo seed (crítico):** además del modo procedural, el generador acepta un *guion plantado*
-  que inyecta un patrón concreto en el historial y en el partido en vivo. Para el clímax
-  necesitamos que *Ashford* tenga un patrón recurrente de "concede tras perder el balón en
-  medio campo" en varios fixtures previos, y que en el partido en vivo ocurra otra vez y
-  termine en gol de *Hartley*. Sin este gancho, la frase clímax no tiene de dónde salir.
-- Media temporada previa = suficiente para head-to-head, rachas de forma y tendencias por
-  jugador reales.
+- **Determinista por seed** → reproducible y testeable.
+- **Demo seed (crítico, ya reflejado en `data/scenarios/`):** además del modo procedural, el
+  generador acepta un *guion plantado* que inyecta un patrón concreto en el historial y en el
+  partido en vivo. Para el clímax: *Ashford* arrastra un patrón de "concede tras perder el
+  balón en medio campo" en varios fixtures previos, y en el vivo vuelve a pasar y termina en
+  gol de *Hartley*. Sin este gancho, la frase clímax no tiene de dónde salir.
+- Media temporada previa (~10–14 jornadas) = suficiente para tabla, forma, head-to-head y
+  tendencias por jugador con sustento real.
 
 ---
 
 ## 4. Layer 2 — Eventos y métricas deterministas
 
+Principio que no se toca: **las métricas se calculan en código, nunca por un modelo.** Los
+valores "esperados" (xG/xT/xA) son **modelos deterministas de peso por zona, no ML** — se
+nombran "xG-like" para no dar a entender aprendizaje automático. Cada métrica es testeable:
+dado un set fijo de eventos, el resultado es un número conocido (asserts en pytest).
+
+### Esquema de evento
+
+Base: `match_id, minute, second, team, player_id, type, subtype, x, y, [end_x, end_y]`.
+
+**Cualificadores** (lo que hace que las métricas no sean básicas): `outcome` (success/fail),
+`body_part` (left/right/head/other), `under_pressure` (+ por quién), `play_pattern`
+(open_play / from_corner / from_free_kick / from_throw_in / counter / direct_free_kick /
+penalty / goal_kick / keeper), `progressive` (bool), `distance`, `angle`, `pitch_zone` (grid de
+18 zonas: tercios × canales), `possession_id`, `phase`, `related_player` (receptor / defensor
+superado), `expected_value` (xG/xT/xA-like).
+
 ### Taxonomía de eventos
 
-Cada evento: `match_id, minute, second, team, player, type, x, y, [end_x, end_y], outcome,
-possession_id, phase`.
+- **En posesión:** pass (short/long/through/switch/cross/cutback/line-breaking), carry,
+  progressive carry, dribble/take-on, key pass, assist, shot (open play/set piece/counter/
+  penalty; on/off/blocked/goal), goal.
+- **Defensivos:** tackle, interception, block, clearance, recovery, duel (ground/aéreo,
+  won/lost), press/press-trigger, counter-press.
+- **Portero:** save (con tipo), punch/catch, sweep (salida), distribution (throw/short/long).
+- **Balón parado / parones:** corner (in/out-swing), free_kick (direct/indirect), throw_in,
+  penalty (scored/missed/saved), goal_kick, kickoff.
+- **Disciplina / otros:** foul (committed/won), card (yellow/red/second-yellow), offside,
+  substitution (motivo: táctico/lesión/tiempo), injury.
 
-Tipos: `pass` (completado/fallado), `carry`, `dribble`, `shot` (on/off/goal/blocked),
-`tackle`, `interception`, `clearance`, `foul`, `turnover`, `pressure`, `duel`, `save`,
-`substitution`, `card`, `offside`, `corner`, `throw_in`, `kickoff`.
+Las **posesiones** encadenan eventos y llevan *fase*: `build_up → progression → final_third →
+outcome`. Esto habilita leer secuencias y transiciones, no eventos sueltos.
 
-Las **posesiones** encadenan eventos y llevan una *fase*: `build_up → progression →
-final_third → outcome`. Esto es lo que habilita leer transiciones y secuencias, no solo
-eventos sueltos.
+### Simulación de posesiones (realismo sin ML)
 
-### Simulación de posesiones (para generar eventos realistas sin ML)
+Máquina de estados por posesión: arranque → progresión (influida por identidad táctica del
+club, atributos de los jugadores y **fatiga**) → tercio final → desenlace (tiro / pérdida /
+falta / balón parado). Determinista con seed; el realismo sale de reglas afinadas + ruido
+controlado, no de un modelo.
 
-Máquina de estados simple por posesión: arranque → progresión (influida por el perfil de
-estilo del club y atributos de jugadores) → tercio final → desenlace (tiro/pérdida/falta).
-Determinista con seed. El realismo no viene de un modelo, viene de reglas afinadas + ruido
-controlado.
+### Catálogo de métricas (todo en código)
 
-### Catálogo de métricas (todo en código, con asserts)
+**Posesión y control** — posesión % (por tiempo y por pases) por tercios; **field tilt** (share
+de toques en tercio final); posesión por fase de juego.
 
-- Posesión % (por tiempo y por pases), con ventana móvil.
-- **Pass network** por equipo (nodos = jugadores, aristas = pases completados con peso).
-- Entradas al tercio final y al área.
-- Progresión por zonas (grid de valor determinista tipo "xT ligero" — **no** es un modelo).
-- Eventos de presión y métrica tipo PPDA (pases por acción defensiva).
-- Pérdidas y su ubicación.
-- Ventanas de transición (tiempo de pérdida → remate).
-- Índice de momentum/ritmo = densidad de eventos ponderada en ventana móvil.
-- Peligro de remate por ubicación (peso de zona determinista).
-- Rachas de forma y head-to-head (desde el historial del universo).
+**Pase y progresión** — % de acierto global y por zona; pases progresivos; pases al tercio final
+y al área; through balls; switches; line-breaking passes; longitud media; direccionalidad (pass
+sonar). **Pass network** por equipo (nodos = jugadores, aristas = pases con peso) con
+**centralidades** (grado, intermediación) para detectar al jugador-eje.
 
-Cada métrica es testeable: dado un set fijo de eventos, el resultado es un número conocido.
+**Conducción** — carries progresivos, al tercio final y al área; distancia conducida.
+
+**Finalización y creación** — tiros, tiros a puerta, **xG-like** total y por tiro, grandes
+ocasiones, mapa de tiros, conversión; key passes, **xA-like**, asistencias; shot-creating y
+goal-creating actions.
+
+**Defensa y presión** — tackles, interceptions, blocks, clearances, recoveries; % de duelos y
+aéreos ganados; acciones defensivas por zona; **PPDA**; recuperaciones altas; éxito de presión;
+recuperaciones por counter-press; proxy de altura de línea.
+
+**Transiciones y balón parado** — pérdidas y su ubicación; velocidad de transición
+(pérdida→remate); contraataques; córners/FK/laterales ganados y convertidos; xG-like a balón
+parado.
+
+**Tempo y momentum** — índice de momentum/ritmo (densidad de eventos ponderada en ventana
+móvil); periodos de control; **xG race** (línea de tiempo de xG acumulado por equipo); índice
+de presión.
+
+**Físico (sintético) y portero** — distancia recorrida, sprints, carreras de alta intensidad,
+curva de fatiga por jugador; paradas, % de parada, **xG prevenido** (post-shot xG-like),
+salidas, precisión de distribución.
+
+**Por estado de partido y rating** — todas las métricas con split por marcador (ganando /
+empatando / perdiendo); **rating por jugador** compuesto determinista (0–10), trazable a sus
+acciones.
+
+Todo esto es la materia prima del Analyst y del Historian: cuanto más rico el catálogo, más
+específica (y menos genérica) la explicación final. Se construye **faseado**: primero el núcleo
+(posesión, pase, tiro, presión), luego las avanzadas (xG race, ratings, físico).
 
 ---
 
@@ -171,12 +289,26 @@ MatchContext {
 | **Personalizer** | `narration` + perfil (club/jugador/idioma/modo) | `personalized` | Dos experiencias distintas + idioma |
 | **Orchestrator** | todo | reporte final | Secuencia el workflow, detecta y expone conflictos, maneja agentes caídos |
 
+### Activación y costo (control de latencia)
+
+Las **métricas se actualizan por evento**, pero los **agentes se activan por ventanas de
+análisis o momentos relevantes** (un gol, un cambio de momentum, una ventana de ~5'), no en
+cada evento. Esto controla latencia y costo de Foundry y concentra el LLM donde aporta.
+
+El estado del workflow usa **checkpoints** (para recuperar la ejecución) y, aparte, un
+**historial consultable** (contexto futbolístico para el Historian): son cosas distintas con
+funciones distintas.
+
 ### Por qué un solo agente no basta (la tesis, para README y video)
 
 El párrafo clímax requiere tres trabajos con **evidencia distinta**: computar el evento
 (métricas), reconocer el patrón de temporada (historial) y decidir que vale contarlo
 (narrativa). El handoff **Historian → Narrator** es lo que hace la narración *contextual* y no
 descriptiva. Cinco prompts en paralelo no lo logran: son jobs distintos con fuentes distintas.
+
+Para **probarlo**, no solo afirmarlo: enviamos un *baseline de un solo agente* (un prompt
+monolítico sobre los mismos eventos) y lo comparamos lado a lado con la salida del enjambre.
+Esa comparación va en la evaluación (§7, día 6–7) y es munición directa para el criterio 5.
 
 ### Mecánica de discrepancia (real, no teatro)
 
@@ -201,7 +333,9 @@ recorrido no se rompe: sale parcial y lo dice.
   cancha en vivo, evidencia desglosable (clic en una afirmación → eventos que la sustentan).
 - **Modo afición:** narrativa, momentos clave, por qué importaron. Menos números, más historia.
 - **Switch analista ↔ afición** en vivo sobre el mismo momento.
-- **Selector de idioma** (es/en) en vivo.
+- **Personalización — 4 ejes (todos entran):** idioma es/en y modo analista/afición (núcleo),
+  más **club favorito** (el Personalizer sesga tono y qué momentos destaca) y **jugador foco**
+  (su mapa de calor, acciones y rating). Conmutables en vivo.
 - **Mapa de cancha**: las coordenadas (x,y) de los eventos se dibujan sobre el campo — es el
   mayor golpe visual y justifica haber elegido eventos con posición.
 - **Procedencia del párrafo clímax**: al pasar sobre la frase, se resalta qué agente aportó
@@ -221,9 +355,20 @@ recorrido no se rompe: sale parcial y lo dice.
 | 3 | 22/10 | Motor de métricas completo + tests con asserts. Reproductor de stream con reloj + API `/stream` (SSE). Frontend: línea de tiempo + mapa de cancha consumiendo el stream |
 | 4 | 23/10 | Agentes sobre MAF: Analyst + Historian con Foundry. Blackboard. Orchestrator fan-out/fan-in |
 | 5 | 24/10 | Narrator + Personalizer. Conflictos (desacuerdo de causa). Fallo del Historian → parcial. Salida multi-idioma |
-| 6 | 25/10 | Deploy serverless en Azure (Container Apps + Functions + Postgres + Foundry). Pulido de UX: dos modos, switch, procedencia del clímax |
+| 6 | 25/10 | Deploy serverless en Azure (Container Apps + Postgres + Foundry). Baseline de un solo agente para la comparación. Pulido de UX: dos modos, switch, procedencia del clímax |
 | 7 | 26/10 | Grabar el partido demo. QA punta a punta desde entorno limpio. Instrucciones de prueba. README final en inglés. Guion del video |
 | 8 | 27/10 | Grabar y editar video <2 min. **Entregar de día, no al filo de la 1:59 a. m.** Dejar la demo arriba (no apagar hasta el 10 de noviembre) |
+
+### Guion del video (<2 min) — arco "construir hacia el párrafo"
+
+| Tramo | Qué se ve |
+|---|---|
+| 0:00–0:20 | **El problema.** Salida típica ("Gol de Hartley, 62'") vs lo que promete TactiX. Gancho corto |
+| 0:20–1:10 | **El clímax.** Partido en vivo con el mapa de cancha; el enjambre arma el párrafo contextual y se muestra la procedencia: qué aportó Analyst, Historian y Narrator, y de qué eventos sale |
+| 1:10–1:40 | **Lo multi-agente.** La discrepancia honesta Analyst vs Historian con su evidencia; luego tumbamos al Historian y el reporte sale parcial y etiquetado (recuperación) |
+| 1:40–2:00 | **Personalización.** Switch analista↔afición y es/en sobre el mismo momento; cierre con el baseline de un solo agente al lado para rematar la tesis |
+
+Todo lo demostrable primero: lo que no entra en estos 2 minutos no manda sobre lo que sí.
 
 ---
 
@@ -245,16 +390,21 @@ recorrido no se rompe: sale parcial y lo dice.
 |---|---|
 | Foundry con cuota/latencia en la demo | Cliente de modelo intercambiable; el motor determinista da una base sin LLM |
 | "Coordenadas + posesiones" es lo más caro de simular | Máquina de estados simple y determinista; afinar con reglas, no con ML |
+| Datos futbolísticos ricos = más simulación/métricas | Fasear: primero el catálogo núcleo (posesión, pase, tiro, presión), luego las avanzadas (xG race, ratings, físico). El núcleo ya alcanza para una demo sólida |
 | "UX al final" se come el tiempo | UI mínima en paralelo desde el día 2; siempre hay algo demostrable |
 | Entrega al filo de la 1:59 a. m. | Cerrar el día 27 de día, con margen |
 | Demo se cae durante evaluación | Serverless scale-to-zero + run grabado como respaldo del video; no apagar hasta 10/11 |
 
 ---
 
-## 10. Decisiones aún abiertas (próxima ronda)
+## 10. Puntos abiertos — resueltos (reunión del 20/10)
 
-- Estructura fina del `pass network` y del grid de valor por zonas (parámetros).
-- Esquema exacto de la base de datos (se deriva de §3–§4).
-- Perfil de personalización: ¿cuántos ejes? (club favorito, jugador foco, idioma, modo) — ¿algo más?
-- Guion literal del video de 2 min (orden de planos).
-- Licencia del repo (pendiente en el README).
+- **Estado del frontend:** Zustand. **i18n:** react-i18next (es/en). *(§1)*
+- **Personalización:** 4 ejes — idioma, modo, club favorito, jugador foco. *(§6)*
+- **Guion del video:** arco "construir hacia el párrafo". *(§7)*
+- **Licencia:** MIT (archivo `LICENSE` + README).
+
+**Me toca cerrarlos al codear (no bloquean, default documentado):**
+
+- Parámetros de los modelos xG/xT/xA-like (pesos por zona) y umbral del `pass network`.
+- Esquema exacto de la base de datos → modelos SQLAlchemy + primera migración Alembic (día 1).

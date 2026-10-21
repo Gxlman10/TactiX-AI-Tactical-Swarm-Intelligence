@@ -129,4 +129,4 @@ Plus language selection, favourite club and single-player focus modes, so the sa
 
 ## License
 
-To be added before public release.
+Released under the [MIT License](LICENSE).
