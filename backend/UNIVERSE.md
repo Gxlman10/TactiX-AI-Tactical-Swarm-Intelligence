@@ -2,12 +2,15 @@
 
 The generator creates 8–10 fictional clubs using the existing Pydantic `League`
 contract. It needs neither a database nor a language model to generate JSON.
+The default version, `league-v2`, includes 23 players per club. `league-v1`
+remains available for reproducing the original club-only output.
 
 From `backend/`:
 
 ```sh
 uv run python -m tactix.universe --seed 42 --clubs 10
-uv run python -m tactix.universe --config ../data/scenarios/league-base.json --output ../data/generated/league-42.json
+uv run python -m tactix.universe --config ../data/scenarios/league-squads.json --output ../data/generated/league-squads-42.json
+uv run python -m tactix.universe --generator-version league-v1 --seed 42 --clubs 10
 ```
 
 The output file must not already exist. Generated files belong in the ignored
@@ -53,15 +56,17 @@ league = generate_league(config)
 ```
 
 The same configuration and generator version produce the same JSON and IDs.
-Each club uses a private random stream derived from the seed, season, version
-and profile key; generation does not alter Python's global random state.
+Each club uses a private random stream derived from the seed, season, club-profile
+version and profile key; generation does not alter Python's global random state.
+Both versions retain the original club-profile random stream, so tactical
+ratings stay the same while `league-v2` adds squads in a separate ID namespace.
 Changing the club count preserves shared tactical ratings but creates a new ID
 namespace. Different seeds and seasons also create separate namespaces, allowing
 generated leagues to coexist in PostgreSQL.
 
 Changing profile values, selection rules, rating generation or ID construction
 requires a new generator version and a reviewed configuration update. Version
-`league-v1` accepts integer seeds from 0 through 2^63−1, club counts 8–10 and a
+Both versions accept integer seeds from 0 through 2^63−1, club counts 8–10 and a
 nonblank season string. Invalid inputs and unknown configuration fields fail
 validation rather than silently using defaults.
 
@@ -73,9 +78,10 @@ with different seeds coexist and reconstruct exactly from another session.
 Inserting the same configuration twice is still a duplicate insert, not an
 update; the persistence API deliberately raises an integrity error.
 
-Squads, fixtures, standings and head-to-head collections are empty. Player
-generation, historical results, the planted demo storyline and live simulation
-remain separate tasks. Tactical variety alone does not prove match realism;
+`league-v1` leaves squads empty; `league-v2` generates them as described in
+`PLAYERS.md`. Fixtures, standings and head-to-head collections remain empty.
+Historical results, the planted demo storyline and live simulation remain
+separate tasks. Tactical variety alone does not prove match realism;
 the simulation layer must use these ratings to influence event probabilities.
 
 Run `uv run pytest -q` for generator, validation and CLI checks. Set

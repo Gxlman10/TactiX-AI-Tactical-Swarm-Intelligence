@@ -233,6 +233,8 @@ def test_generated_leagues_round_trip_without_id_collisions(database):
     engine, _ = database
     sessions = session_factory(engine)
     leagues = [generate_league(LeagueConfig(seed=seed)) for seed in (42, 43)]
+    leagues.append(generate_league(LeagueConfig(seed=42, generator_version="league-v1")))
+    assert sum(len(club.squad) for club in leagues[0].clubs) == 230
     with sessions.begin() as session:
         for league in leagues:
             add_league(session, league)

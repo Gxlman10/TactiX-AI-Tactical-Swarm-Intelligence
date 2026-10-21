@@ -9,13 +9,14 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from tactix.domain.enums import BuildUpStyle
 from tactix.domain.universe import Club, League, TacticalIdentity
+from tactix.universe.players import generate_squad
 from tactix.universe.profiles import PROFILES
 
 
 class LeagueConfig(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, frozen=True)
 
-    generator_version: Literal["league-v1"] = "league-v1"
+    generator_version: Literal["league-v1", "league-v2"] = "league-v2"
     seed: int = Field(default=42, ge=0, le=2**63 - 1)
     club_count: int = Field(default=10, ge=8, le=10)
     season: str = "2026/27"
@@ -72,7 +73,7 @@ def describe_tactics(identity: TacticalIdentity) -> tuple[list[str], list[str]]:
 
 
 def generate_league(config: LeagueConfig | None = None) -> League:
-    """Generate club identities only; squads and history are separate generators.
+    """Generate club identities, plus squads in league-v2. History stays separate.
 
     Per-club random streams preserve tactical ratings when expanding the same
     seed and season to nine or ten clubs. IDs namespace each configuration,
@@ -86,7 +87,7 @@ def generate_league(config: LeagueConfig | None = None) -> League:
     clubs = []
     for profile in PROFILES[: config.club_count]:
         digest = hashlib.sha256(
-            f"{config.generator_version}:{config.seed}:{config.season}:{profile.slug}".encode()
+            f"league-v1:{config.seed}:{config.season}:{profile.slug}".encode()
         ).digest()
         rng = random.Random(int.from_bytes(digest, "big"))
         line, press, tempo, width, set_pieces = (
@@ -116,6 +117,8 @@ def generate_league(config: LeagueConfig | None = None) -> League:
                 weaknesses=weaknesses,
             )
         )
+        if config.generator_version == "league-v2":
+            clubs[-1].squad = generate_squad(clubs[-1], config.seed)
     return League(
         id=str(namespace), name="TactiX Synthetic League", season=config.season, clubs=clubs
     )

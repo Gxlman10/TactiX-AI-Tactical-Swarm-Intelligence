@@ -18,7 +18,7 @@ from tactix.universe.profiles import PROFILES
 
 @pytest.mark.parametrize("count", [8, 9, 10])
 def test_club_contract_and_diversity(count):
-    league = generate_league(LeagueConfig(club_count=count))
+    league = generate_league(LeagueConfig(club_count=count, generator_version="league-v1"))
     assert len(league.clubs) == count
     assert len({club.id for club in league.clubs}) == count
     assert len({club.name for club in league.clubs}) == count
@@ -101,7 +101,7 @@ def test_rating_variation_preserves_profile_and_description(seed):
         {"seed": True},
         {"seed": 2**63},
         {"season": "   "},
-        {"generator_version": "league-v2"},
+        {"generator_version": "league-v3"},
         {"unknown": 42},
     ],
 )
@@ -133,7 +133,9 @@ def test_manifest_and_cli_export(tmp_path):
     )
     assert result.stdout == ""
     generated = League.model_validate_json(output.read_text(encoding="utf-8"))
-    assert generated == generate_league(LeagueConfig(seed=config.seed, club_count=8))
+    assert generated == generate_league(
+        LeagueConfig(seed=config.seed, club_count=8, generator_version=config.generator_version)
+    )
     failed = subprocess.run(
         [
             sys.executable,
