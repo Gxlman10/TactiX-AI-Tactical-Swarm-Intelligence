@@ -81,13 +81,35 @@ Ese último punto es el que hay que poder demostrar explícitamente en el video 
 
 La evaluación tiene dos etapas. La primera es un **pass/fail**: verifica que el proyecto encaje razonablemente con el tema y aplique las tecnologías del hackathon. Los que pasan se evalúan con cinco criterios **de peso igual, 20% cada uno**:
 
-| Criterio | Qué miran |
-|---|---|
-| Technological Implementation | Creatividad en la creación de datos sintéticos, calidad del desarrollo, uso efectivo de las *hero technologies*, código estructurado, documentado y mantenible |
-| Agentic Design & Innovation | Patrones agénticos, orquestación, integración MCP, colaboración multiagente, novedad de la implementación |
-| Real-World Impact & Applicability | Relevancia del problema, viabilidad en producción, impacto potencial |
-| User Experience & Presentation | UX intuitiva, video que comunique el valor con claridad, balance entre frontend y backend |
-| Adherence to Hackathon Category | Cumplimiento de la descripción de la categoría elegida |
+> El texto oficial literal, en inglés, está en [`JUDGING-RUBRIC.md`](JUDGING-RUBRIC.md). Lo de abajo es la traducción de trabajo.
+
+### 1. Implementación tecnológica — 20%
+
+- Buenas prácticas de desarrollo de software
+- Uso efectivo de las *hero technologies*
+- Código bien estructurado, documentado y mantenible
+
+### 2. Diseño agéntico e innovación — 20%
+
+- Aplicación creativa de patrones de IA agéntica
+- Orquestación sofisticada de agentes o colaboración multiagente
+- Implementación de IA novedosa, o mejoras significativas sobre enfoques existentes
+
+### 3. Impacto y aplicabilidad real — 20%
+
+- Relevancia del problema que se resuelve
+- Preparación para despliegue en producción
+- Impacto potencial sobre desarrolladores, empresas o usuarios finales
+
+### 4. Experiencia de usuario y presentación — 20%
+
+- Experiencia de usuario bien diseñada e intuitiva
+- Comunicación clara del valor del proyecto en la demo
+- Balance entre implementación de frontend y backend
+
+### 5. Cumplimiento de la categoría — 20%
+
+- Cumplir con la descripción de la categoría del hackathon correspondiente (en nuestro caso, **Best Multi-Agent System**)
 
 **Hero technologies** que el reglamento nombra: Microsoft Foundry, Agent Framework, Azure MCP, GitHub Copilot Agent Mode, Fabric, GitHub SDK, GitHub CLI, Azure Apps and AI Services, bases de datos de Azure.
 

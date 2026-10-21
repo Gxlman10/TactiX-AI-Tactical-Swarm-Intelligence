@@ -3,7 +3,7 @@
 Proyecto para el hackathon **Microsoft × Premier League "Inside the Game" 2026**.
 Categoría objetivo: **Best Multi-Agent System**. Entrega: **28 de octubre, 1:59 a. m. (hora de Perú)**.
 
-Antes de empezar, lee `README.md` (qué estamos construyendo) y `docs/CONTEXTO-HACKATHON.md` (reglas, fechas, criterios de evaluación y qué descalifica).
+Antes de empezar, lee `README.md` (qué estamos construyendo), `docs/CONTEXTO-HACKATHON.md` (reglas, fechas y qué descalifica) y `docs/JUDGING-RUBRIC.md` (rúbrica oficial de evaluación).
 
 ---
 
@@ -48,6 +48,27 @@ Cuando los agentes se contradigan, el Orchestrator expone el desacuerdo en vez d
 Python + FastAPI (backend) · React + TypeScript (frontend) · PostgreSQL · Microsoft Agent Framework · Microsoft Foundry · Azure Container Apps / Functions.
 
 Las *hero technologies* que el jurado valora están listadas en `docs/CONTEXTO-HACKATHON.md`. Usarlas de forma significativa suma; usarlas de forma decorativa no.
+
+---
+
+## Cómo nos evalúan
+
+Cinco criterios, **20% cada uno**. Ninguno pesa más que otro, y eso debe guiar dónde se invierte el tiempo:
+
+1. **Technological Implementation** — buenas prácticas, uso efectivo de las *hero technologies*, código estructurado, documentado y mantenible.
+2. **Agentic Design & Innovation** — patrones agénticos creativos, orquestación sofisticada o colaboración multiagente, implementación novedosa.
+3. **Real-World Impact & Applicability** — relevancia del problema, preparación para producción, impacto potencial.
+4. **User Experience & Presentation** — UX intuitiva, comunicación clara del valor en la demo, **balance entre frontend y backend**.
+5. **Adherence to Hackathon Category** — cumplir la descripción de Best Multi-Agent System.
+
+Consecuencias prácticas al tomar decisiones:
+
+- Un backend brillante con un frontend descuidado pierde en el criterio 4, que vale lo mismo que el código. El reparto de esfuerzo tiene que ser equilibrado.
+- "Production deployment readiness" se evalúa de verdad: manejo de errores, configuración, logs y un despliegue real suman, no son adorno.
+- El código se lee. Estructura, nombres y documentación cuentan como criterio propio, no como consecuencia.
+- Antes de agregar una funcionalidad nueva, preguntar a qué criterio aporta. Si no aporta a ninguno, no entra.
+
+Texto oficial completo en `docs/JUDGING-RUBRIC.md`.
 
 ---
 
