@@ -125,3 +125,9 @@ denominator evidence, partial cuts, empty observations, defensive attribution,
 goal deduplication, invalid inputs and real simulated matches. Run
 `uv run pytest tests/unit/test_core_metrics.py -q`. Configure the existing
 PostgreSQL test URL when running the entire backend suite.
+
+## Advanced metrics
+
+For opt-in xG-like totals, shot maps, directed pass networks, PPDA and field tilt,
+see [ADVANCED_METRICS.md](ADVANCED_METRICS.md). Use `--advanced` to select
+`advanced-v1`; the default CLI and Python core API retain `core-v1` behavior.
