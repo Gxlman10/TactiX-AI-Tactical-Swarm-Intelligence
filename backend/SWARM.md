@@ -5,6 +5,10 @@ language model. It supplies packaged English prompts, tool schemas, scoped model
 requests and response guards around the unchanged domain contracts. It requires
 no Foundry credentials, agent-framework installation or network access.
 
+The first real runtime adapter is documented in [FOUNDRY.md](FOUNDRY.md): Analyst
+and Historian can run through MAF/Foundry once project access is configured. The
+full five-role workflow remains separate, and cloud smoke validation is pending.
+
 ## Roles and handoffs
 
 | Specialist | Reads | Writes | Allowed evidence tools |

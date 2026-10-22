@@ -20,7 +20,8 @@ dependencies = [
 # Microsoft Agent Framework + Foundry live here so the base env always installs even while
 # these preview packages settle. Install with: uv sync --extra agents
 agents = [
-    "agent-framework",
+    "agent-framework-core==1.19.0",
+    "agent-framework-foundry==1.13.1",
     "azure-identity>=1.19",
 ]
 

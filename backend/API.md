@@ -17,6 +17,8 @@ The complete [frontend integration contract](../.claude/docs/ai/live-match-api/a
 describes payloads, cursor recovery, seek revisions, errors and operating limits.
 For the opt-in `ashford-demo-v1` scenario and its historical evidence endpoints,
 see [DEMO.md](DEMO.md).
+For the configured two-specialist MAF/Foundry analysis endpoint, see
+[FOUNDRY.md](FOUNDRY.md); cloud smoke validation remains pending.
 Existing `/health` behavior is preserved. Startup generates the league once;
 match generation and metric computation run outside the async request loop.
 

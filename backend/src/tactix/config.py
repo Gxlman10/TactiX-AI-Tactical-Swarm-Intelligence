@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Literal
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,6 +26,12 @@ class Settings(BaseSettings):
     foundry_endpoint: str | None = None
     foundry_api_key: str | None = None
     foundry_model: str | None = None
+    foundry_authentication: Literal["cli", "default", "managed_identity"] = "cli"
+    foundry_timeout_seconds: float = Field(default=30, gt=0, le=120)
+    foundry_max_attempts: int = Field(default=2, ge=1, le=2)
+    foundry_max_tool_calls: int = Field(default=8, ge=1, le=20)
+    foundry_max_iterations: int = Field(default=5, ge=1, le=10)
+    foundry_max_tokens: int = Field(default=2048, ge=256, le=8192)
 
     # Product
     default_language: str = "en"

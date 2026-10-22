@@ -9,7 +9,10 @@ from sse_starlette.sse import EventSourceResponse
 from starlette.background import BackgroundTask
 from starlette.concurrency import run_in_threadpool
 
+from tactix.agents.foundry import SpecialistRun, require_foundry_configuration, run_specialists
+from tactix.agents.tools import EvidenceTools
 from tactix.api.sessions import CreateSession, SessionInfo, SessionStore
+from tactix.config import settings
 from tactix.demo.scenario import DemoContext, demo_context
 from tactix.domain.metrics import MetricsSnapshot
 from tactix.domain.universe import League
@@ -85,6 +88,46 @@ async def list_sessions(request: Request):
 @router.get("/sessions/{session_id}", response_model=SessionInfo)
 async def session_info(request: Request, session_id: str):
     return store(request).get(session_id).info()
+
+
+@router.post("/sessions/{session_id}/analyze", response_model=SpecialistRun)
+async def analyze_session(request: Request, session_id: str):
+    session = store(request).get(session_id)
+    try:
+        require_foundry_configuration(settings)
+    except ValueError:
+        raise HTTPException(
+            503, "Configure Foundry project, deployment and Entra authentication"
+        ) from None
+    if session.analyzing:
+        raise HTTPException(409, "Analysis is already running for this session")
+    session.analyzing = True
+    state = session.player.snapshot()
+    try:
+        league = session.demo.league if session.demo else store(request).league
+        historical = session.demo.historical_matches if session.demo else None
+        scope = await run_in_threadpool(
+            EvidenceTools,
+            session.result,
+            league,
+            int(state.position_seconds),
+            revision=state.revision,
+            historical_matches=historical,
+        )
+        if session.closed:
+            raise HTTPException(404, "Unknown or expired session")
+        if session.player.snapshot().revision != state.revision:
+            raise HTTPException(409, "Timeline changed before analysis; retry")
+        result = await run_specialists(scope, settings)
+        if session.closed:
+            raise HTTPException(404, "Unknown or expired session")
+        if session.player.snapshot().revision != state.revision:
+            raise HTTPException(409, "Timeline changed during analysis; discard stale findings")
+        return result
+    except ImportError:
+        raise HTTPException(503, "Install the agents extra to enable Foundry analysis") from None
+    finally:
+        session.analyzing = False
 
 
 @router.get("/sessions/{session_id}/league", response_model=League)

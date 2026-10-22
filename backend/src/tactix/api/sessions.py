@@ -64,6 +64,7 @@ class Session:
         self.start = 0
         self.closed = False
         self.subscribers = 0
+        self.analyzing = False
         self.changed = asyncio.Event()
 
     def notify(self) -> None:
