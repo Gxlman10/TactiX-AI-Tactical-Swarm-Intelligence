@@ -1,0 +1,3175 @@
+{
+  "version": "rehearsal-v1",
+  "scenario": "ashford-demo-v1",
+  "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+  "season": "2026/27",
+  "start": 3660,
+  "end": 3780,
+  "initial": 3720,
+  "teams": [
+    {
+      "id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+      "name": "Ashford",
+      "city": "Ashford Vale",
+      "formation": "4-3-3",
+      "players": [
+        {
+          "id": "cf2ebd7a-64cc-5d94-83ed-dc2a8f7a6bbf",
+          "name": "Merrin Drell",
+          "number": 1
+        },
+        {
+          "id": "29b296e9-59e9-5cb7-b28d-0b6425e812d2",
+          "name": "Harlan Loxley",
+          "number": 2
+        },
+        {
+          "id": "3abdd4c3-945c-524f-99c8-f66d365da2dc",
+          "name": "Jory Mossden",
+          "number": 3
+        },
+        {
+          "id": "78152daa-cf92-5722-b126-893ebc366e77",
+          "name": "Darian Marden",
+          "number": 4
+        },
+        {
+          "id": "8abedf04-d5d3-51a7-b56e-7672e26b846c",
+          "name": "Darian Drell",
+          "number": 5
+        },
+        {
+          "id": "b50d7a6e-ea1c-5a8d-b582-aefdbb08c472",
+          "name": "Loren Hollow",
+          "number": 6
+        },
+        {
+          "id": "4d52ae1f-1ee2-57e9-9ded-eed45e5fc086",
+          "name": "Harlan Vale",
+          "number": 7
+        },
+        {
+          "id": "0805cffd-c92c-53fb-b9d0-4a0584785a6a",
+          "name": "Bram Nerrow",
+          "number": 8
+        },
+        {
+          "id": "fe3b8fd3-ac4c-5199-af6a-aee45180692a",
+          "name": "Perrin Iverley",
+          "number": 9
+        },
+        {
+          "id": "83adaa33-047f-5a67-9968-1589a3f6125f",
+          "name": "Kellan Garrow",
+          "number": 10
+        },
+        {
+          "id": "31d31c23-bf80-59ab-92f9-8ab29c495b78",
+          "name": "Kellan Drell",
+          "number": 11
+        },
+        {
+          "id": "0a8b218c-1a36-5651-a34a-8e69e10cd0ff",
+          "name": "Merrin Marden",
+          "number": 12
+        },
+        {
+          "id": "de2de4df-4527-559b-8add-9ba6d9ea9fdf",
+          "name": "Orin Oaklen",
+          "number": 13
+        },
+        {
+          "id": "16944c1f-d313-5989-ac94-3409f4e9f84c",
+          "name": "Evan Garrow",
+          "number": 14
+        },
+        {
+          "id": "ca2cccea-cee5-55a9-851f-d9388671ef4e",
+          "name": "Evan Drell",
+          "number": 15
+        },
+        {
+          "id": "76d9a718-5242-529b-92bc-17bc22ef18e8",
+          "name": "Evan Hollow",
+          "number": 16
+        },
+        {
+          "id": "302224db-6718-5534-ba39-f694681090cf",
+          "name": "Jory Fenwick",
+          "number": 17
+        },
+        {
+          "id": "7e753aa9-d4da-5427-aecb-f46131e8f6b2",
+          "name": "Iven Vale",
+          "number": 18
+        },
+        {
+          "id": "36dee912-4bb1-5ad7-8cca-fa6472edf22e",
+          "name": "Galen Nerrow",
+          "number": 19
+        },
+        {
+          "id": "b4f2e999-d0a3-5342-888e-ca7acade6194",
+          "name": "Evan Jarrow",
+          "number": 20
+        },
+        {
+          "id": "4ffe5aaf-86b5-5658-b855-7d3b71962e99",
+          "name": "Finn Drell",
+          "number": 21
+        },
+        {
+          "id": "1bf9d073-8de7-5251-9f5d-165ec331cd41",
+          "name": "Alden Ember",
+          "number": 22
+        },
+        {
+          "id": "81a858f2-4bfd-59fd-a142-9ef6809c26f1",
+          "name": "Jory Jarrow",
+          "number": 23
+        }
+      ]
+    },
+    {
+      "id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+      "name": "Northbridge",
+      "city": "Northbridge Reach",
+      "formation": "4-2-3-1",
+      "players": [
+        {
+          "id": "5ce92677-817c-566c-ba96-3af91916dde6",
+          "name": "Loren Vale",
+          "number": 1
+        },
+        {
+          "id": "cfddc12c-2855-558c-bcf2-3833b4fd5e1b",
+          "name": "Galen Jarrow",
+          "number": 2
+        },
+        {
+          "id": "6254f304-6c18-5723-838c-b92258f239e8",
+          "name": "Iven Kestrel",
+          "number": 3
+        },
+        {
+          "id": "f1a05ba8-5b10-503c-a333-2fa4f3864100",
+          "name": "Niall Marden",
+          "number": 4
+        },
+        {
+          "id": "3365efec-054c-51c6-80e9-499ebec4bcfe",
+          "name": "Jory Pell",
+          "number": 5
+        },
+        {
+          "id": "55ff282f-429c-55d0-b9e2-8f9f628d45c2",
+          "name": "Kellan Hollow",
+          "number": 6
+        },
+        {
+          "id": "77dd5826-33ca-5175-b665-71b103c520f2",
+          "name": "Galen Iverley",
+          "number": 7
+        },
+        {
+          "id": "8e3871bb-cb08-544e-80ed-21b561581381",
+          "name": "Galen Marden",
+          "number": 8
+        },
+        {
+          "id": "228c7229-91e6-553b-ba27-ef8b4bb5bb5a",
+          "name": "Perrin Drell",
+          "number": 9
+        },
+        {
+          "id": "5d5bb1c6-7685-59d8-a858-254cfd98f493",
+          "name": "Evan Garrow",
+          "number": 10
+        },
+        {
+          "id": "2dbd03c6-4409-5937-8add-9f90b0f25ba7",
+          "name": "Finn Hartley",
+          "number": 11
+        },
+        {
+          "id": "dd9847b7-2388-5ac1-ab57-c3f215057a7c",
+          "name": "Evan Ember",
+          "number": 12
+        },
+        {
+          "id": "6b86400a-0f84-5fab-bd06-bdb079692d4f",
+          "name": "Bram Corven",
+          "number": 13
+        },
+        {
+          "id": "b294cc40-0a58-501b-b8f3-649a011c1354",
+          "name": "Alden Vale",
+          "number": 14
+        },
+        {
+          "id": "bc295304-bc63-587e-b7bc-ff8cf41a9556",
+          "name": "Evan Hollow",
+          "number": 15
+        },
+        {
+          "id": "c2c5c543-30ae-5c59-ac90-a7d114b61cf9",
+          "name": "Bram Pell",
+          "number": 16
+        },
+        {
+          "id": "1b2d5280-7498-5a22-bb08-0a1fec8725db",
+          "name": "Evan Drell",
+          "number": 17
+        },
+        {
+          "id": "694fa292-09d3-5302-94cf-ed9cd57ce887",
+          "name": "Orin Fenwick",
+          "number": 18
+        },
+        {
+          "id": "cce334a3-8267-5d22-a6d4-e121c6c47fd2",
+          "name": "Iven Pell",
+          "number": 19
+        },
+        {
+          "id": "22e4a506-e605-5aac-b671-c0666f7cfd1e",
+          "name": "Evan Fenwick",
+          "number": 20
+        },
+        {
+          "id": "4f876e45-ee73-5508-adb0-c06694a8c45e",
+          "name": "Bram Nerrow",
+          "number": 21
+        },
+        {
+          "id": "b11be912-42e4-5894-b70a-e4695f052343",
+          "name": "Kellan Mossden",
+          "number": 22
+        },
+        {
+          "id": "668d1e46-9d87-5fcb-b31a-3344affddab8",
+          "name": "Alden Drell",
+          "number": 23
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "b7e13c85-b0df-5e3c-9a2c-b242d15fb854",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 61,
+      "second": 9,
+      "team_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+      "player_id": "b50d7a6e-ea1c-5a8d-b582-aefdbb08c472",
+      "type": "press",
+      "subtype": null,
+      "start": {
+        "x": 4.0,
+        "y": 52.07879804652866
+      },
+      "end": null,
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "counter",
+      "progressive": false,
+      "distance": null,
+      "angle": null,
+      "pitch_zone": 4,
+      "possession_id": "ac031556-0d24-5b98-b580-470b55bf176a",
+      "related_player_id": "77dd5826-33ca-5175-b665-71b103c520f2",
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "2b5f4aee-4af8-550d-9627-e7e1ff7cdfa0",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 61,
+      "second": 9,
+      "team_id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+      "player_id": "77dd5826-33ca-5175-b665-71b103c520f2",
+      "type": "pass",
+      "subtype": "long",
+      "start": {
+        "x": 96.0,
+        "y": 47.92120195347134
+      },
+      "end": {
+        "x": 96.0,
+        "y": 43.05550972632353
+      },
+      "outcome": "fail",
+      "body_part": null,
+      "under_pressure": true,
+      "pressured_by": "b50d7a6e-ea1c-5a8d-b582-aefdbb08c472",
+      "play_pattern": "counter",
+      "progressive": false,
+      "distance": 3.3087,
+      "angle": -1.5707963267948966,
+      "pitch_zone": 15,
+      "possession_id": "ac031556-0d24-5b98-b580-470b55bf176a",
+      "related_player_id": "55ff282f-429c-55d0-b9e2-8f9f628d45c2",
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "372aca34-51cd-53be-a857-e98e0a45cfba",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 61,
+      "second": 17,
+      "team_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+      "player_id": "b50d7a6e-ea1c-5a8d-b582-aefdbb08c472",
+      "type": "recovery",
+      "subtype": null,
+      "start": {
+        "x": 4.0,
+        "y": 56.94449027367647
+      },
+      "end": null,
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "counter",
+      "progressive": false,
+      "distance": null,
+      "angle": null,
+      "pitch_zone": 4,
+      "possession_id": "c9534f48-abc1-5efd-8cfe-7fc9b23a3b98",
+      "related_player_id": null,
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "a694bccf-68cd-508a-8e68-96b39dd2c0bc",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 61,
+      "second": 36,
+      "team_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+      "player_id": "b50d7a6e-ea1c-5a8d-b582-aefdbb08c472",
+      "type": "pass",
+      "subtype": null,
+      "start": {
+        "x": 4.0,
+        "y": 56.94449027367647
+      },
+      "end": {
+        "x": 50.0,
+        "y": 50.0
+      },
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "open_play",
+      "progressive": true,
+      "distance": 48.5302964862418,
+      "angle": -0.09745947630804616,
+      "pitch_zone": 4,
+      "possession_id": "c9534f48-abc1-5efd-8cfe-7fc9b23a3b98",
+      "related_player_id": "29b296e9-59e9-5cb7-b28d-0b6425e812d2",
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "97b7bc9b-4062-5a78-9816-c2261b71624f",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 61,
+      "second": 40,
+      "team_id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+      "player_id": "cfddc12c-2855-558c-bcf2-3833b4fd5e1b",
+      "type": "press",
+      "subtype": null,
+      "start": {
+        "x": 50.0,
+        "y": 50.0
+      },
+      "end": null,
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "open_play",
+      "progressive": false,
+      "distance": null,
+      "angle": null,
+      "pitch_zone": 10,
+      "possession_id": "c9534f48-abc1-5efd-8cfe-7fc9b23a3b98",
+      "related_player_id": "29b296e9-59e9-5cb7-b28d-0b6425e812d2",
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "9a41e112-6f32-565b-99f0-6814d40de940",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 61,
+      "second": 40,
+      "team_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+      "player_id": "29b296e9-59e9-5cb7-b28d-0b6425e812d2",
+      "type": "pass",
+      "subtype": null,
+      "start": {
+        "x": 50.0,
+        "y": 50.0
+      },
+      "end": {
+        "x": 55.0,
+        "y": 50.0
+      },
+      "outcome": "fail",
+      "body_part": null,
+      "under_pressure": true,
+      "pressured_by": "cfddc12c-2855-558c-bcf2-3833b4fd5e1b",
+      "play_pattern": "open_play",
+      "progressive": false,
+      "distance": 5.25,
+      "angle": 0.0,
+      "pitch_zone": 10,
+      "possession_id": "c9534f48-abc1-5efd-8cfe-7fc9b23a3b98",
+      "related_player_id": "b50d7a6e-ea1c-5a8d-b582-aefdbb08c472",
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "c02b679b-6066-5d35-8854-fed15c3911f0",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 61,
+      "second": 48,
+      "team_id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+      "player_id": "cfddc12c-2855-558c-bcf2-3833b4fd5e1b",
+      "type": "recovery",
+      "subtype": null,
+      "start": {
+        "x": 45.0,
+        "y": 50.0
+      },
+      "end": null,
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "open_play",
+      "progressive": false,
+      "distance": null,
+      "angle": null,
+      "pitch_zone": 10,
+      "possession_id": "64cb38b0-c3d3-562c-b294-d4ba548b6d35",
+      "related_player_id": null,
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "7cd5f889-27a5-5f86-9503-351b2ebc97fb",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 61,
+      "second": 54,
+      "team_id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+      "player_id": "cfddc12c-2855-558c-bcf2-3833b4fd5e1b",
+      "type": "pass",
+      "subtype": null,
+      "start": {
+        "x": 45.0,
+        "y": 50.0
+      },
+      "end": {
+        "x": 82.0,
+        "y": 25.0
+      },
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "open_play",
+      "progressive": true,
+      "distance": 42.40663273592941,
+      "angle": -0.41247795442472196,
+      "pitch_zone": 10,
+      "possession_id": "64cb38b0-c3d3-562c-b294-d4ba548b6d35",
+      "related_player_id": "2dbd03c6-4409-5937-8add-9f90b0f25ba7",
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "89769e18-f722-5b00-b2e3-6ed6b635ef47",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 62,
+      "second": 0,
+      "team_id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+      "player_id": "2dbd03c6-4409-5937-8add-9f90b0f25ba7",
+      "type": "shot",
+      "subtype": null,
+      "start": {
+        "x": 82.0,
+        "y": 25.0
+      },
+      "end": {
+        "x": 100.0,
+        "y": 50.0
+      },
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "open_play",
+      "progressive": false,
+      "distance": 25.420660888340414,
+      "angle": 0.21523682402913236,
+      "pitch_zone": 14,
+      "possession_id": "64cb38b0-c3d3-562c-b294-d4ba548b6d35",
+      "related_player_id": null,
+      "expected_value": 0.0902,
+      "shot_outcome": "goal",
+      "card_type": null
+    },
+    {
+      "id": "2f12c30b-e683-5546-863f-0fea2072d570",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 62,
+      "second": 0,
+      "team_id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+      "player_id": "2dbd03c6-4409-5937-8add-9f90b0f25ba7",
+      "type": "goal",
+      "subtype": "from_shot:89769e18-f722-5b00-b2e3-6ed6b635ef47",
+      "start": {
+        "x": 82.0,
+        "y": 25.0
+      },
+      "end": null,
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "open_play",
+      "progressive": false,
+      "distance": null,
+      "angle": null,
+      "pitch_zone": 14,
+      "possession_id": "64cb38b0-c3d3-562c-b294-d4ba548b6d35",
+      "related_player_id": null,
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "670369bf-e652-5b3c-94d1-bdef126d8106",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 62,
+      "second": 8,
+      "team_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+      "player_id": "29b296e9-59e9-5cb7-b28d-0b6425e812d2",
+      "type": "kickoff",
+      "subtype": null,
+      "start": {
+        "x": 50.0,
+        "y": 50.0
+      },
+      "end": null,
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "open_play",
+      "progressive": false,
+      "distance": null,
+      "angle": null,
+      "pitch_zone": 10,
+      "possession_id": "547c9000-9cbb-539e-8f8a-8ccdea54b067",
+      "related_player_id": null,
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    },
+    {
+      "id": "99e2097d-eb15-5800-a65a-2e64ec7e8896",
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "minute": 62,
+      "second": 9,
+      "team_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+      "player_id": "29b296e9-59e9-5cb7-b28d-0b6425e812d2",
+      "type": "pass",
+      "subtype": null,
+      "start": {
+        "x": 50.0,
+        "y": 50.0
+      },
+      "end": {
+        "x": 99.0,
+        "y": 0.0
+      },
+      "outcome": "success",
+      "body_part": null,
+      "under_pressure": false,
+      "pressured_by": null,
+      "play_pattern": "open_play",
+      "progressive": true,
+      "distance": 61.66929949334596,
+      "angle": -0.58395495306431,
+      "pitch_zone": 10,
+      "possession_id": "547c9000-9cbb-539e-8f8a-8ccdea54b067",
+      "related_player_id": "3abdd4c3-945c-524f-99c8-f66d365da2dc",
+      "expected_value": null,
+      "shot_outcome": null,
+      "card_type": null
+    }
+  ],
+  "snapshots": {
+    "3660": [
+      {
+        "possession_pct": 63.9148,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0852,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3661": [
+      {
+        "possession_pct": 63.8935,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1065,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3662": [
+      {
+        "possession_pct": 63.8723,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1277,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3663": [
+      {
+        "possession_pct": 63.851,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.149,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3664": [
+      {
+        "possession_pct": 63.8298,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1702,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3665": [
+      {
+        "possession_pct": 63.8086,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1914,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3666": [
+      {
+        "possession_pct": 63.7874,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2126,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3667": [
+      {
+        "possession_pct": 63.7662,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2338,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3668": [
+      {
+        "possession_pct": 63.745,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.255,
+        "passes_attempted": 49.0,
+        "pass_accuracy_pct": 63.2653,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3669": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3670": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3671": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3672": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3673": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3674": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3675": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3676": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3677": [
+      {
+        "possession_pct": 63.7239,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2761,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3678": [
+      {
+        "possession_pct": 63.7359,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2641,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3679": [
+      {
+        "possession_pct": 63.7479,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2521,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3680": [
+      {
+        "possession_pct": 63.7599,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2401,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3681": [
+      {
+        "possession_pct": 63.772,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.228,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3682": [
+      {
+        "possession_pct": 63.784,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.216,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3683": [
+      {
+        "possession_pct": 63.796,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.204,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3684": [
+      {
+        "possession_pct": 63.8079,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1921,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3685": [
+      {
+        "possession_pct": 63.8199,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1801,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3686": [
+      {
+        "possession_pct": 63.8319,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1681,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3687": [
+      {
+        "possession_pct": 63.8439,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1561,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3688": [
+      {
+        "possession_pct": 63.8558,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1442,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3689": [
+      {
+        "possession_pct": 63.8678,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1322,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3690": [
+      {
+        "possession_pct": 63.8797,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1203,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3691": [
+      {
+        "possession_pct": 63.8916,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1084,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3692": [
+      {
+        "possession_pct": 63.9036,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0964,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3693": [
+      {
+        "possession_pct": 63.9155,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0845,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3694": [
+      {
+        "possession_pct": 63.9274,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0726,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3695": [
+      {
+        "possession_pct": 63.9393,
+        "passes_attempted": 99.0,
+        "pass_accuracy_pct": 78.7879,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0607,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3696": [
+      {
+        "possession_pct": 63.9512,
+        "passes_attempted": 100.0,
+        "pass_accuracy_pct": 79.0,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0488,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3697": [
+      {
+        "possession_pct": 63.9631,
+        "passes_attempted": 100.0,
+        "pass_accuracy_pct": 79.0,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0369,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3698": [
+      {
+        "possession_pct": 63.975,
+        "passes_attempted": 100.0,
+        "pass_accuracy_pct": 79.0,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.025,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3699": [
+      {
+        "possession_pct": 63.9868,
+        "passes_attempted": 100.0,
+        "pass_accuracy_pct": 79.0,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0132,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3700": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3701": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3702": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3703": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3704": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3705": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3706": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3707": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3708": [
+      {
+        "possession_pct": 63.9987,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0013,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3709": [
+      {
+        "possession_pct": 63.9776,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0224,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3710": [
+      {
+        "possession_pct": 63.9566,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0434,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3711": [
+      {
+        "possession_pct": 63.9355,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0645,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3712": [
+      {
+        "possession_pct": 63.9145,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0855,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3713": [
+      {
+        "possession_pct": 63.8935,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1065,
+        "passes_attempted": 50.0,
+        "pass_accuracy_pct": 62.0,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3714": [
+      {
+        "possession_pct": 63.8725,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1275,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3715": [
+      {
+        "possession_pct": 63.8515,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1485,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3716": [
+      {
+        "possession_pct": 63.8305,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1695,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3717": [
+      {
+        "possession_pct": 63.8095,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1905,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3718": [
+      {
+        "possession_pct": 63.7886,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2114,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3719": [
+      {
+        "possession_pct": 63.7676,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2324,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 12.0,
+        "goals": 0.0,
+        "xg_like": 1.4619,
+        "field_tilt": 62.5
+      }
+    ],
+    "3720": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3721": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3722": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3723": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3724": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3725": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3726": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3727": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3728": [
+      {
+        "possession_pct": 63.7467,
+        "passes_attempted": 101.0,
+        "pass_accuracy_pct": 78.2178,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3729": [
+      {
+        "possession_pct": 63.7586,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2414,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3730": [
+      {
+        "possession_pct": 63.7705,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2295,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3731": [
+      {
+        "possession_pct": 63.7824,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2176,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3732": [
+      {
+        "possession_pct": 63.7942,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.2058,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3733": [
+      {
+        "possession_pct": 63.8061,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1939,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3734": [
+      {
+        "possession_pct": 63.8179,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1821,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3735": [
+      {
+        "possession_pct": 63.8298,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1702,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3736": [
+      {
+        "possession_pct": 63.8416,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1584,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3737": [
+      {
+        "possession_pct": 63.8535,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1465,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3738": [
+      {
+        "possession_pct": 63.8653,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1347,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3739": [
+      {
+        "possession_pct": 63.8771,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1229,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3740": [
+      {
+        "possession_pct": 63.8889,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.1111,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3741": [
+      {
+        "possession_pct": 63.9007,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0993,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3742": [
+      {
+        "possession_pct": 63.9125,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0875,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3743": [
+      {
+        "possession_pct": 63.9243,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0757,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3744": [
+      {
+        "possession_pct": 63.936,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.064,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3745": [
+      {
+        "possession_pct": 63.9478,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0522,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3746": [
+      {
+        "possession_pct": 63.9596,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0404,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3747": [
+      {
+        "possession_pct": 63.9713,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0287,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3748": [
+      {
+        "possession_pct": 63.9831,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0169,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3749": [
+      {
+        "possession_pct": 63.9948,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 36.0052,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3750": [
+      {
+        "possession_pct": 64.0065,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.9935,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3751": [
+      {
+        "possession_pct": 64.0182,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.9818,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3752": [
+      {
+        "possession_pct": 64.0299,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.9701,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3753": [
+      {
+        "possession_pct": 64.0417,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.9583,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3754": [
+      {
+        "possession_pct": 64.0534,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.9466,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3755": [
+      {
+        "possession_pct": 64.065,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.935,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3756": [
+      {
+        "possession_pct": 64.0767,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.9233,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3757": [
+      {
+        "possession_pct": 64.0884,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.9116,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3758": [
+      {
+        "possession_pct": 64.1001,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.8999,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3759": [
+      {
+        "possession_pct": 64.1117,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.8883,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3760": [
+      {
+        "possession_pct": 64.1234,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.8766,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3761": [
+      {
+        "possession_pct": 64.135,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.865,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3762": [
+      {
+        "possession_pct": 64.1467,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.8533,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3763": [
+      {
+        "possession_pct": 64.1583,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.8417,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3764": [
+      {
+        "possession_pct": 64.1699,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.8301,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3765": [
+      {
+        "possession_pct": 64.1815,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.8185,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3766": [
+      {
+        "possession_pct": 64.1931,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.8069,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3767": [
+      {
+        "possession_pct": 64.2047,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7953,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3768": [
+      {
+        "possession_pct": 64.2163,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7837,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3769": [
+      {
+        "possession_pct": 64.2279,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7721,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3770": [
+      {
+        "possession_pct": 64.2395,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7605,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3771": [
+      {
+        "possession_pct": 64.2511,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7489,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3772": [
+      {
+        "possession_pct": 64.2626,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7374,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3773": [
+      {
+        "possession_pct": 64.2742,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7258,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3774": [
+      {
+        "possession_pct": 64.2857,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7143,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3775": [
+      {
+        "possession_pct": 64.2973,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.7027,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3776": [
+      {
+        "possession_pct": 64.3088,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.6912,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3777": [
+      {
+        "possession_pct": 64.3203,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.6797,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3778": [
+      {
+        "possession_pct": 64.3318,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.6682,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3779": [
+      {
+        "possession_pct": 64.3433,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.6567,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ],
+    "3780": [
+      {
+        "possession_pct": 64.3548,
+        "passes_attempted": 102.0,
+        "pass_accuracy_pct": 78.4314,
+        "shots": 11.0,
+        "goals": 1.0,
+        "xg_like": 0.8963,
+        "field_tilt": 37.5
+      },
+      {
+        "possession_pct": 35.6452,
+        "passes_attempted": 51.0,
+        "pass_accuracy_pct": 62.7451,
+        "shots": 13.0,
+        "goals": 1.0,
+        "xg_like": 1.5521,
+        "field_tilt": 62.5
+      }
+    ]
+  },
+  "context": {
+    "scenario_version": "ashford-demo-v1",
+    "revision": 0,
+    "at_second": 3720,
+    "historical_patterns": {
+      "f453195d-f766-5731-9f0b-54b5066d414e": [
+        {
+          "match_id": "f453195d-f766-5731-9f0b-54b5066d414e",
+          "possession_ids": [
+            "9af08daf-4807-5f7b-8e0b-4efd79dd6aa0",
+            "d813d0cf-61ac-5e8d-a93f-dec544baea97"
+          ],
+          "event_ids": [
+            "eedef46c-57fd-51b0-9b3f-7f752a45f2fa",
+            "1978612a-f699-58a6-9be0-bd183cb4ba74",
+            "bb2330b2-a98c-59d4-8eca-82a6b2e3e76f",
+            "97387ebd-e167-5187-9da0-1c5ec28db3c7"
+          ],
+          "conceding_club_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+          "scoring_club_id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+          "scorer_id": "2dbd03c6-4409-5937-8add-9f90b0f25ba7",
+          "loss_second": 3700,
+          "goal_second": 3720,
+          "elapsed_seconds": 20,
+          "shot_channel": "left"
+        }
+      ],
+      "6ea7d42d-85cc-5063-87ca-6cf7dae72c4b": [
+        {
+          "match_id": "6ea7d42d-85cc-5063-87ca-6cf7dae72c4b",
+          "possession_ids": [
+            "51f63714-cb68-556b-bb70-a080c25e0991",
+            "82b2fe3a-e5dd-593c-be47-40edbb3fe61f"
+          ],
+          "event_ids": [
+            "8ab5cc6c-389c-52c3-996a-4336dff8888a",
+            "a6a16b5e-c632-57db-80f2-855328bcd56b",
+            "2538b667-316d-515a-96c2-14eff2466ca9",
+            "870f403b-d2cd-5074-8a38-d715b3b396f6"
+          ],
+          "conceding_club_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+          "scoring_club_id": "bbef1b22-684a-5970-af78-d4579080087a",
+          "scorer_id": "b083fa98-868a-55d1-bed0-601278551984",
+          "loss_second": 3700,
+          "goal_second": 3720,
+          "elapsed_seconds": 20,
+          "shot_channel": "left"
+        }
+      ],
+      "22bc7a81-b444-5af1-95e0-688220c42613": [
+        {
+          "match_id": "22bc7a81-b444-5af1-95e0-688220c42613",
+          "possession_ids": [
+            "8a239ad5-b471-507c-a7d7-954486e62883",
+            "66a33f6f-fb9d-549a-9548-4480b00ed6cd"
+          ],
+          "event_ids": [
+            "99ec2cec-5142-56cb-be4a-4651e18c0dd4",
+            "38cdad75-e0e4-59d1-bca3-229cc37fb5e7",
+            "d6a9943e-cd35-5750-b0fe-29e27188e6dd",
+            "db52ac89-2669-5867-b770-892a9bbb8f55"
+          ],
+          "conceding_club_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+          "scoring_club_id": "2f1f070f-4d43-5f08-8121-a7cb473e6316",
+          "scorer_id": "7f216496-b91e-5495-b651-e2fc2aedde95",
+          "loss_second": 3700,
+          "goal_second": 3720,
+          "elapsed_seconds": 20,
+          "shot_channel": "left"
+        }
+      ],
+      "cd9b7b89-27e3-53d7-bf48-c2ae650f0882": [
+        {
+          "match_id": "cd9b7b89-27e3-53d7-bf48-c2ae650f0882",
+          "possession_ids": [
+            "46d421b4-ce65-5d33-87f1-d05969c16164",
+            "c69e1eeb-394b-56cc-bc11-6e9e897ac6f6"
+          ],
+          "event_ids": [
+            "9a66af22-9123-586a-9e8e-032819cc5ff8",
+            "3e5ad7a0-ba4c-54b9-9716-20b4d1493799",
+            "bf283b19-75ce-5517-9f2a-3d3928a22df1",
+            "394e2e92-8e22-53e2-bc82-be2826965c1d"
+          ],
+          "conceding_club_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+          "scoring_club_id": "149cc14f-7376-5523-b22c-63672149f218",
+          "scorer_id": "e21f5b92-1dc5-53e5-8566-4755cccae474",
+          "loss_second": 3700,
+          "goal_second": 3720,
+          "elapsed_seconds": 20,
+          "shot_channel": "left"
+        }
+      ]
+    },
+    "climax": {
+      "match_id": "5b5c494a-729a-5dc6-b8a8-914933a3e115",
+      "possession_ids": [
+        "c9534f48-abc1-5efd-8cfe-7fc9b23a3b98",
+        "64cb38b0-c3d3-562c-b294-d4ba548b6d35"
+      ],
+      "event_ids": [
+        "9a41e112-6f32-565b-99f0-6814d40de940",
+        "c02b679b-6066-5d35-8854-fed15c3911f0",
+        "89769e18-f722-5b00-b2e3-6ed6b635ef47",
+        "2f12c30b-e683-5546-863f-0fea2072d570"
+      ],
+      "conceding_club_id": "b26adb4d-86bf-57c4-97e7-91be2bf79b4d",
+      "scoring_club_id": "2d579e84-7b17-50f7-be37-0bc58987e49d",
+      "scorer_id": "2dbd03c6-4409-5937-8add-9f90b0f25ba7",
+      "loss_second": 3700,
+      "goal_second": 3720,
+      "elapsed_seconds": 20,
+      "shot_channel": "left"
+    },
+    "verified_consecutive_matches": 4,
+    "scorer_season_goals": 10,
+    "scorer_fixture_ids": [
+      "0289d46d-da0a-5e4e-a0c3-63df79c97e15",
+      "164f234a-b4d1-5176-83aa-9005765ebbb6",
+      "4cb167a9-f673-5860-9792-182ad27aaca0",
+      "e7687435-005b-5e8c-9172-f95090157b9e",
+      "f26f0274-a33d-5e04-932a-7c6c0a521971",
+      "f453195d-f766-5731-9f0b-54b5066d414e"
+    ],
+    "scorer_live_goal_ids": ["2f12c30b-e683-5546-863f-0fea2072d570"],
+    "earlier_meeting_fixture_ids": ["f453195d-f766-5731-9f0b-54b5066d414e"],
+    "preview": "Goal by Finn Hartley, 62:00, from the left channel. He has 10 goals in the recorded season. Ashford conceded 20 seconds after losing the ball in midfield; that pattern appears in each of their last 4 matches, including this one. The same pattern appears in the earlier Northbridge meeting."
+  }
+}
