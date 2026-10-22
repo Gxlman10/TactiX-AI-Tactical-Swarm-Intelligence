@@ -1,5 +1,8 @@
 # Deterministic possession and event engine
 
+For clocked playback with pause, speed, seek and asynchronous event batches, see
+[REPLAY.md](REPLAY.md). Generation remains independent of playback timing.
+
 From `backend/`, create a full synthetic match or an ordered event stream:
 
 ```sh
