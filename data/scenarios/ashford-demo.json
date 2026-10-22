@@ -1,0 +1,8 @@
+{
+  "scenario_version": "ashford-demo-v1",
+  "base_league_seed": 42,
+  "base_match_seed": 42,
+  "history_matchdays": 12,
+  "duration_minutes": 90,
+  "climax_second": 3720
+}

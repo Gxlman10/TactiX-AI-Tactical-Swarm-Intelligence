@@ -15,6 +15,8 @@ POST `{"action":"play"}` to `/api/v1/sessions/{session_id}/controls`.
 
 The complete [frontend integration contract](../.claude/docs/ai/live-match-api/api-handoff.md)
 describes payloads, cursor recovery, seek revisions, errors and operating limits.
+For the opt-in `ashford-demo-v1` scenario and its historical evidence endpoints,
+see [DEMO.md](DEMO.md).
 Existing `/health` behavior is preserved. Startup generates the league once;
 match generation and metric computation run outside the async request loop.
 

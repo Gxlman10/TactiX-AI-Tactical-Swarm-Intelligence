@@ -10,8 +10,10 @@ from starlette.background import BackgroundTask
 from starlette.concurrency import run_in_threadpool
 
 from tactix.api.sessions import CreateSession, SessionInfo, SessionStore
+from tactix.demo.scenario import DemoContext, demo_context
 from tactix.domain.metrics import MetricsSnapshot
 from tactix.domain.universe import League
+from tactix.simulation.engine import MatchResult
 from tactix.simulation.replay import ReplayEvent, ReplayUpdate
 
 router = APIRouter(prefix="/api/v1", tags=["match sessions"])
@@ -83,6 +85,31 @@ async def list_sessions(request: Request):
 @router.get("/sessions/{session_id}", response_model=SessionInfo)
 async def session_info(request: Request, session_id: str):
     return store(request).get(session_id).info()
+
+
+@router.get("/sessions/{session_id}/league", response_model=League)
+async def session_league(request: Request, session_id: str):
+    session = store(request).get(session_id)
+    return session.demo.league if session.demo else store(request).league
+
+
+@router.get("/sessions/{session_id}/context", response_model=DemoContext)
+async def session_context(request: Request, session_id: str):
+    session = store(request).get(session_id)
+    if session.demo is None:
+        raise HTTPException(409, "This session has no authored demo context")
+    state = session.player.snapshot()
+    context = demo_context(session.demo, int(state.position_seconds))
+    context.revision = state.revision
+    return context
+
+
+@router.get("/sessions/{session_id}/history/{fixture_id}", response_model=MatchResult)
+async def historical_events(request: Request, session_id: str, fixture_id: str):
+    session = store(request).get(session_id)
+    if session.demo is None or fixture_id not in session.demo.historical_matches:
+        raise HTTPException(404, "No event artifact for this historical fixture")
+    return session.demo.historical_matches[fixture_id]
 
 
 @router.post("/sessions/{session_id}/controls", response_model=ReplayUpdate)

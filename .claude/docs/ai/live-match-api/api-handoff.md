@@ -69,6 +69,7 @@ interface ReplayUpdate {
 }
 interface SessionInfo {
   session_id: string;
+  scenario: 'procedural' | 'ashford-demo-v1';
   home_club_id: string;
   away_club_id: string;
   state: ReplayUpdate;
@@ -197,6 +198,31 @@ allows all origins. The frontend must close connections when unmounting or switc
 sessions. Release unused sessions with DELETE to free capacity.
 
 ## Operating limits
+
+### Authored Ashford demo
+
+Add `"scenario":"ashford-demo-v1"` to the create body to select the authored
+scenario. Keep Ashford home/Northbridge away, match seed 42 and duration 90; other
+configurations are 422. Default scenario remains `procedural`.
+
+For every session, GET `/sessions/{id}/league` resolves its own historical ledger.
+The global `/league` still returns the procedural ledger, so fixture IDs differ
+for demo sessions. GET `/sessions/{id}/context` on a demo session returns
+`scenario_version`, `revision`, `at_second`, `historical_patterns`, nullable
+`climax`, `verified_consecutive_matches`, `scorer_season_goals`,
+`scorer_fixture_ids`, `scorer_live_goal_ids`, `earlier_meeting_fixture_ids` and
+nullable `preview`. Procedural sessions return 409. This is an authored deterministic
+preview, not agent output.
+
+Before 62:00 `climax`/`preview` are null. At 62:00 the preview cites Hartley's actual
+recorded count (ten), the twenty-second turnover sequence, and four consecutive
+verified appearances. Pattern evidence identifies match, possession and event IDs.
+GET `/sessions/{id}/history/{fixture_id}` resolves any of the four full historical
+match artifacts; other fixtures and the live match ID return 404. Remaining
+historical fixtures have summaries only. Use the usual seek/reset flow and discard
+context from stale revisions. Seek to 3660, then play at 60x for a one-second lead-in.
+
+### Session lifetime
 
 The demo retains up to 16 sessions and permits 8 subscribers per session. Concurrent
 match creation reservations also consume the session limit. Sessions disappear on

@@ -4,11 +4,13 @@ import asyncio
 import time
 from bisect import bisect_left, bisect_right
 from collections.abc import AsyncIterator, Callable
+from typing import Literal
 from uuid import uuid4
 
 from fastapi import HTTPException
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from tactix.demo.scenario import DemoBundle, build_demo
 from tactix.domain.universe import Club, League
 from tactix.metrics.advanced import AdvancedMetrics
 from tactix.simulation.engine import MatchConfig, MatchResult, simulate_match
@@ -21,19 +23,34 @@ class CreateSession(BaseModel):
     away: str = Field(default="Northbridge", min_length=1, max_length=100)
     match: MatchConfig = Field(default_factory=MatchConfig)
     speed: float = Field(default=60, gt=0, le=10000, allow_inf_nan=False)
+    scenario: Literal["procedural", "ashford-demo-v1"] = "procedural"
+
+    @model_validator(mode="after")
+    def demo_configuration(self):
+        if self.scenario == "ashford-demo-v1" and self.match != MatchConfig():
+            raise ValueError("ashford-demo-v1 requires match-v1 seed 42 and duration 90")
+        return self
 
 
 class SessionInfo(BaseModel):
     session_id: str
+    scenario: Literal["procedural", "ashford-demo-v1"]
     home_club_id: str
     away_club_id: str
     state: ReplayUpdate
 
 
 class Session:
-    def __init__(self, result: MatchResult, speed: float, now: Callable[[], float]):
+    def __init__(
+        self,
+        result: MatchResult,
+        speed: float,
+        now: Callable[[], float],
+        demo: DemoBundle | None = None,
+    ):
         self.id = str(uuid4())
         self.result = result
+        self.demo = demo
         self.player = MatchReplay(result, speed=speed, now=now)
         self.metrics = AdvancedMetrics(
             result.match_id,
@@ -56,6 +73,7 @@ class Session:
     def info(self) -> SessionInfo:
         return SessionInfo(
             session_id=self.id,
+            scenario="ashford-demo-v1" if self.demo else "procedural",
             home_club_id=self.result.home_club_id,
             away_club_id=self.result.away_club_id,
             state=self.player.snapshot(),
@@ -166,6 +184,13 @@ class SessionStore:
         raise HTTPException(404, "Unknown fictional club")
 
     def build(self, home: Club, away: Club, config: CreateSession) -> Session:
+        if config.scenario == "ashford-demo-v1":
+            if (home.name, away.name) != ("Ashford", "Northbridge"):
+                raise HTTPException(
+                    422, "ashford-demo-v1 requires Ashford home and Northbridge away"
+                )
+            demo = build_demo()
+            return Session(demo.live, config.speed, self.now, demo=demo)
         result = simulate_match(home, away, config.match)
         return Session(result, config.speed, self.now)
 

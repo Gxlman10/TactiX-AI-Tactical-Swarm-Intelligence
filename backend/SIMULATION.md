@@ -3,6 +3,9 @@
 For clocked playback with pause, speed, seek and asynchronous event batches, see
 [REPLAY.md](REPLAY.md). Generation remains independent of playback timing.
 
+For the explicit authored Ashford scenario, see [DEMO.md](DEMO.md). It overlays
+versioned event sequences without changing the default procedural engine.
+
 From `backend/`, create a full synthetic match or an ordered event stream:
 
 ```sh
