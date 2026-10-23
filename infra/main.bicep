@@ -13,18 +13,18 @@ param location string = resourceGroup().location
 @description('Short prefix for resource names.')
 param namePrefix string = 'tactix'
 
-@description('Backend image reference, e.g. <acr>.azurecr.io/tactix-backend:latest')
+@description('Backend image reference, e.g. ghcr.io/<owner>/tactix-backend:latest or <acr>.azurecr.io/tactix-backend:latest')
 param backendImage string
 
-@description('ACR login server, e.g. <acr>.azurecr.io')
-param registryServer string
+@description('Registry login server. Leave empty for a public image (e.g. a public GHCR package).')
+param registryServer string = ''
 
-@description('ACR username (admin user).')
-param registryUsername string
+@description('Registry username. Leave empty for a public image.')
+param registryUsername string = ''
 
 @secure()
-@description('ACR password (admin credential).')
-param registryPassword string
+@description('Registry password. Leave empty for a public image.')
+param registryPassword string = ''
 
 @description('PostgreSQL administrator login.')
 param postgresAdminUser string = 'tactix'
@@ -51,6 +51,9 @@ var logName = '${namePrefix}-logs'
 var envName = '${namePrefix}-env'
 var appName = '${namePrefix}-backend'
 var postgresServerName = '${namePrefix}-pg-${uniqueString(resourceGroup().id)}'
+
+// A private registry needs credentials; a public image (e.g. a public GHCR package) does not.
+var usePrivateRegistry = !empty(registryPassword)
 
 resource logs 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: logName
@@ -126,15 +129,17 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
         targetPort: 8000
         transport: 'auto'
       }
-      registries: [
+      registries: usePrivateRegistry ? [
         {
           server: registryServer
           username: registryUsername
           passwordSecretRef: 'registry-password'
         }
-      ]
-      secrets: [
+      ] : []
+      secrets: usePrivateRegistry ? [
         { name: 'registry-password', value: registryPassword }
+        { name: 'database-url', value: databaseUrl }
+      ] : [
         { name: 'database-url', value: databaseUrl }
       ]
     }

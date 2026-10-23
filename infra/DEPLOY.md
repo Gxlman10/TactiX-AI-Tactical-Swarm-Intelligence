@@ -27,15 +27,44 @@ az provider register --namespace Microsoft.DBforPostgreSQL
 az provider register --namespace Microsoft.OperationalInsights
 ```
 
-## Deploy
+Some subscriptions restrict the **allowed regions** via policy. List yours and pick one that is
+allowed (and set `TACTIX_LOCATION` to it):
 
 ```bash
-TACTIX_PG_PASSWORD='<a-strong-password>' ./infra/deploy.sh
+az policy assignment list --disable-scope-strict-match \
+  --query "[].parameters.listOfAllowedLocations.value" -o json
 ```
 
-`deploy.sh` creates the resource group, an Azure Container Registry, builds the backend image
-**inside ACR** (`az acr build`, so no local Docker is needed), then deploys the Bicep. It
-prints the `backendUrl`, `postgresHost`, and `backendPrincipalId` outputs.
+## The image: GitHub Actions → GHCR (no local Docker, no ACR Tasks)
+
+Student subscriptions commonly disallow **ACR Tasks**, so `az acr build` fails. Instead, the
+`.github/workflows/build-image.yml` workflow builds the backend on GitHub's runners and
+publishes it to the **GitHub Container Registry**:
+`ghcr.io/<owner>/tactix-backend:latest`.
+
+1. Merge the workflow to `dev`/`main` (or run it from the Actions tab → *Build backend image*
+   → *Run workflow*). Wait for it to finish green.
+2. **Make the package public once** so Container Apps can pull it without credentials:
+   GitHub → your profile → **Packages** → `tactix-backend` → **Package settings** → *Change
+   visibility* → **Public**. (Alternatively keep it private and pass a pull PAT as the
+   `registry*` parameters.)
+
+## Deploy
+
+Point the deploy at the public image — no ACR is created:
+
+```bash
+export TACTIX_PG_PASSWORD='<a-strong-password>'
+export TACTIX_LOCATION=brazilsouth   # an allowed region
+export TACTIX_BACKEND_IMAGE='ghcr.io/<owner>/tactix-backend:latest'
+./infra/deploy.sh
+```
+
+`deploy.sh` creates the resource group, deploys the Bicep (Log Analytics, Container Apps
+environment, the backend Container App pulling the public image, and PostgreSQL Flexible
+B1ms), and prints the `backendUrl`, `postgresHost`, and `backendPrincipalId` outputs.
+
+> Leaving `TACTIX_BACKEND_IMAGE` unset falls back to the ACR-build path, which needs ACR Tasks.
 
 Verify:
 
@@ -43,7 +72,7 @@ Verify:
 curl "<backendUrl>/health"
 ```
 
-Override any default via `TACTIX_*` env vars (`TACTIX_RG`, `TACTIX_LOCATION`, `TACTIX_ACR`,
+Override any default via `TACTIX_*` env vars (`TACTIX_RG`, `TACTIX_LOCATION`,
 `TACTIX_MIN_REPLICAS`, …) — see the top of `deploy.sh`.
 
 ## Database migrations

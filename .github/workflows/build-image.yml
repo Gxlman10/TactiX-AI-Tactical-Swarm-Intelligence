@@ -1,0 +1,49 @@
+name: Build backend image
+
+# Builds the backend container image on GitHub's runners and publishes it to the GitHub
+# Container Registry (GHCR). This needs no local Docker and no ACR Tasks, so it works on
+# subscriptions (e.g. Azure for Students) that disallow server-side ACR builds. Azure
+# Container Apps then pulls the published image — make the GHCR package public once so no
+# pull credentials are needed (see infra/DEPLOY.md).
+
+on:
+  push:
+    branches: [dev, main]
+    paths:
+      - backend/**
+      - .github/workflows/build-image.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/tactix-backend
+          tags: |
+            type=raw,value=latest
+            type=sha
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
