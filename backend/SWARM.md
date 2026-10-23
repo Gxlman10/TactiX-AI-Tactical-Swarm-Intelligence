@@ -7,7 +7,8 @@ no Foundry credentials, agent-framework installation or network access.
 
 The first real runtime adapter is documented in [FOUNDRY.md](FOUNDRY.md): Analyst
 and Historian can run through MAF/Foundry once project access is configured. The
-full five-role workflow remains separate, and cloud smoke validation is pending.
+full five-role workflow that sequences every handoff is documented in
+[WORKFLOW.md](WORKFLOW.md); cloud smoke validation is pending.
 
 ## Roles and handoffs
 
@@ -25,10 +26,12 @@ anchored conflicts and no report; the runtime merges those conflicts before call
 the Narrator. Finalization preserves upstream outputs and reports their failures.
 The two Orchestrator phases are invocations of one specialist, not a sixth agent.
 
-This delivery specifies that order; it is not an implemented MAF workflow. Runtime
-creation, timeouts, retries, Foundry deployment, checkpointing and live report SSE
-remain separate tasks. Tools and validation are executable today, independently of
-those runtimes. A model is never used for counting football actions.
+This delivery specifies that order; the runtime that executes it lives in
+`tactix.workflows` ([WORKFLOW.md](WORKFLOW.md)), which performs the fan-out, code-level
+conflict review, Narrator fan-in, Personalizer and deterministic report assembly with
+graceful degradation. Foundry deployment, checkpointing and live report SSE remain
+separate tasks. Tools and validation are executable today, independently of those
+runtimes. A model is never used for counting football actions.
 
 ## Scoped request example
 
