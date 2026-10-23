@@ -1272,3 +1272,124 @@ footer p,
 .club-monogram > span {
   font-size: 12px;
 }
+.session-launcher {
+  max-width: 960px;
+  margin: 64px auto;
+  padding: 24px;
+}
+.session-launcher > .brand {
+  display: inline-block;
+  margin-bottom: 32px;
+}
+.connection-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  background: #1f1f1f;
+  border: 1px solid #3a3d36;
+  border-radius: 12px;
+}
+.connection-copy {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.connection-panel strong {
+  display: block;
+  font-size: 16px;
+  line-height: 24px;
+}
+.connection-panel p,
+.connection-panel small {
+  color: #a7afa0;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 8px 0 0;
+}
+.connection-panel > small {
+  flex-basis: 100%;
+}
+.connection-panel code {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-top: 8px;
+  font-size: 12px;
+}
+.connection-panel button {
+  background: #313131;
+  color: #f5f5ef;
+  padding: 8px 12px;
+  border: 1px solid #464942;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.connection-panel button:hover {
+  background: #464942;
+}
+.connection-panel button:active {
+  transform: translateY(1px);
+}
+.connection-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+.connection-panel form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  width: 100%;
+}
+.connection-panel input,
+.connection-panel select {
+  background: #181818;
+  color: #f5f5ef;
+  border: 1px solid #64695e;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font: inherit;
+  max-width: 100%;
+}
+.connection-panel input {
+  width: 320px;
+}
+button:disabled,
+select:disabled,
+input:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+@media (max-width: 600px) {
+  .session-launcher {
+    margin: 24px auto;
+    padding: 16px;
+  }
+  .connection-panel input {
+    width: 100%;
+  }
+  .connection-panel form label {
+    width: 100%;
+  }
+}
+
+.history-more {
+  margin: 16px 24px 0;
+  padding: 8px 12px;
+  background: #313131;
+  color: #f5f5ef;
+  border: 1px solid #464942;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+.history-more:hover {
+  background: #464942;
+}

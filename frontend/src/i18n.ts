@@ -1,6 +1,31 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 const en = {
+  olderEvents: "Show earlier actions",
+  loadingHistory: "Loading visible history…",
+  connection: "Match connection",
+  serverReplay: "Server replay",
+  useServer: "Connect to backend",
+  useLocal: "Open local rehearsal",
+  createSession: "Create demo session",
+  joinSession: "Join session",
+  sessionId: "Session ID",
+  reconnect: "Reconnect",
+  connection_idle: "Connect your match studio",
+  connection_connecting: "Loading match from backend…",
+  connection_connected: "Connected to server",
+  connection_reconnecting: "Reconnecting · displayed data may be stale",
+  connection_closed: "Session closed",
+  connection_error: "Connection failed",
+  requestError: "Request failed:",
+  connectDescription:
+    "Create an Ashford demo or join an existing session. The backend controls the clock and computes all metrics.",
+  serverHint:
+    "Sessions are temporary and shared. Controls affect every viewer. Leaving releases sessions you created; joined sessions remain active.",
+  liveFeedSub: "Recorded actions up to the server clock",
+  serverNotes:
+    "Live connection to the synthetic match backend. Clock, score and metrics come from the server. Historical context is an authored preview; no model inference is active.",
+
   navigation: "WORKSPACE",
   viewMode: "View mode",
   matchMetrics: "Match metrics",
@@ -101,6 +126,32 @@ const en = {
   evidenceHint: "Choose an action in the timeline to inspect its source.",
 };
 const es: typeof en = {
+  olderEvents: "Ver acciones anteriores",
+  loadingHistory: "Cargando historial visible…",
+  connection: "Conexión del partido",
+  serverReplay: "Replay del servidor",
+  useServer: "Conectar al backend",
+  useLocal: "Abrir ensayo local",
+  createSession: "Crear sesión demo",
+  joinSession: "Unirse a sesión",
+  sessionId: "ID de sesión",
+  reconnect: "Reconectar",
+  connection_idle: "Conecta tu estudio de partido",
+  connection_connecting: "Cargando partido del backend…",
+  connection_connected: "Conectado al servidor",
+  connection_reconnecting:
+    "Reconectando · los datos pueden estar desactualizados",
+  connection_closed: "Sesión cerrada",
+  connection_error: "Falló la conexión",
+  requestError: "Falló la solicitud:",
+  connectDescription:
+    "Crea la demo de Ashford o únete a una sesión existente. El backend controla el reloj y calcula todas las métricas.",
+  serverHint:
+    "Las sesiones son temporales y compartidas. Los controles afectan a todos. Al salir se liberan las sesiones que creaste; las sesiones ajenas siguen activas.",
+  liveFeedSub: "Acciones registradas hasta el reloj del servidor",
+  serverNotes:
+    "Conexión al backend de partidos sintéticos. Reloj, marcador y métricas vienen del servidor. El contexto histórico es una preview guionada; no hay inferencia activa.",
+
   navigation: "ESPACIO DE TRABAJO",
   viewMode: "Modo de vista",
   matchMetrics: "Métricas del partido",
@@ -202,12 +253,10 @@ const es: typeof en = {
   evidenceHint:
     "Elige una acción en la cronología para inspeccionar su fuente.",
 };
-void i18n
-  .use(initReactI18next)
-  .init({
-    resources: { en: { translation: en }, es: { translation: es } },
-    lng: "en",
-    fallbackLng: "en",
-    interpolation: { escapeValue: false },
-  });
+void i18n.use(initReactI18next).init({
+  resources: { en: { translation: en }, es: { translation: es } },
+  lng: "en",
+  fallbackLng: "en",
+  interpolation: { escapeValue: false },
+});
 export default i18n;

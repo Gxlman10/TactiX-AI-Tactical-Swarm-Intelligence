@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
@@ -18,30 +18,68 @@ import {
   clock,
   fixture,
   metricsAt,
-  player,
-  teamOf,
   timeOf,
   visibleEvents,
+  type MatchEvent,
+  type Team,
+  type Context,
 } from "./features/match/model";
 import { useStudio, type Language } from "./features/preferences/store";
 import i18n from "./i18n";
 
-export default function App() {
+export interface StudioView {
+  teams: Team[];
+  season: string;
+  events: MatchEvent[];
+  metrics: Record<string, number>[];
+  context: Context | null;
+  second: number;
+  start: number;
+  end: number;
+  score: number[];
+  playing: boolean;
+  speed: number;
+  selectedId: string | null;
+  busy: boolean;
+  seek: (second: number) => void;
+  select: (id: string) => void;
+  togglePlay: () => void;
+  setSpeed: (speed: number) => void;
+}
+export default function App({
+  view,
+  sessionPanel,
+}: {
+  view?: StudioView;
+  sessionPanel?: React.ReactNode;
+}) {
   const { t } = useTranslation();
-  const state = useStudio();
-  const visible = visibleEvents(state.second);
+  const [timelineLimit, setTimelineLimit] = useState(50);
+  const local = useStudio();
+  const state = { ...local, ...view };
+  const teams = view?.teams ?? fixture.teams;
+  const context = view ? view.context : fixture.context;
+  const score = view?.score ?? metricsAt(local.second).map((row) => row.goals);
+  const start = view?.start ?? fixture.start;
+  const end = view?.end ?? fixture.end;
+  const player = (id: string | null) =>
+    teams.flatMap((team) => team.players).find((player) => player.id === id);
+  const teamOf = (id: string) => teams.find((team) => team.id === id);
+  const visible = view?.events ?? visibleEvents(state.second);
   const selected = visible.find((e) => e.id === state.selectedId);
-  const metrics = metricsAt(state.second);
-  const hasContext = state.second >= fixture.context.climax!.goal_second;
+  const metrics = view?.metrics ?? metricsAt(state.second);
+  const hasContext = Boolean(
+    context?.climax && state.second >= context.climax.goal_second,
+  );
   useEffect(() => {
     void i18n.changeLanguage(state.language);
     document.documentElement.lang = state.language;
   }, [state.language]);
   useEffect(() => {
-    if (!state.playing) return;
-    const timer = window.setInterval(state.advance, 1000 / state.speed);
+    if (view || !local.playing) return;
+    const timer = window.setInterval(local.advance, 1000 / local.speed);
     return () => window.clearInterval(timer);
-  }, [state.playing, state.speed, state.advance]);
+  }, [view, local.playing, local.speed, local.advance]);
   if (window.location.pathname !== "/")
     return (
       <main className="not-found">
@@ -102,7 +140,7 @@ export default function App() {
             <div className="top-actions">
               <span className="rehearsal">
                 <span className="tiny-dot" />
-                {t("rehearsal")}
+                {t(view ? "serverReplay" : "rehearsal")}
               </span>
               <label className="language">
                 <Globe size={18} />
@@ -121,6 +159,7 @@ export default function App() {
             </div>
           </header>
           <main id="main">
+            {sessionPanel}
             <section className="intro">
               <div>
                 <p className="eyebrow">TACTICAL SWARM INTELLIGENCE</p>
@@ -153,37 +192,40 @@ export default function App() {
                 <div>
                   <strong>TactiX League</strong>
                   <small>
-                    {t("season")} {fixture.season} · {t("matchday")}
+                    {t("season")} {view?.season ?? fixture.season} ·{" "}
+                    {t("matchday")}
                   </small>
                 </div>
               </div>
               <div className="score-match">
                 <div className="club home">
                   <span className="club-monogram">
-                    A<span>FC</span>
+                    {teams[0].name[0]}
+                    <span>FC</span>
                   </span>
                   <div>
-                    <strong>Ashford</strong>
+                    <strong>{teams[0].name}</strong>
                     <small>
-                      {fixture.teams[0].formation} · {t("home")}
+                      {teams[0].formation} · {t("home")}
                     </small>
                   </div>
                 </div>
                 <div className="score">
                   <strong>
-                    {metrics[0].goals} <span>:</span> {metrics[1].goals}
+                    {score[0]} <span>:</span> {score[1]}
                   </strong>
                   <span className="match-clock">{clock(state.second)}</span>
                 </div>
                 <div className="club away">
                   <div>
-                    <strong>Northbridge</strong>
+                    <strong>{teams[1].name}</strong>
                     <small>
-                      {fixture.teams[1].formation} · {t("away")}
+                      {teams[1].formation} · {t("away")}
                     </small>
                   </div>
                   <span className="club-monogram">
-                    N<span>FC</span>
+                    {teams[1].name[0]}
+                    <span>FC</span>
                   </span>
                 </div>
               </div>
@@ -206,12 +248,14 @@ export default function App() {
                         "xg_like",
                       ] as const
                     )[index];
-                    const format = (n: number) =>
-                      index < 2
-                        ? `${n.toFixed(1)}%`
-                        : index === 3
-                          ? n.toFixed(2)
-                          : n;
+                    const format = (n: number | undefined) =>
+                      !Number.isFinite(n)
+                        ? "—"
+                        : index < 2
+                          ? `${n!.toFixed(1)}%`
+                          : index === 3
+                            ? n!.toFixed(2)
+                            : n;
                     return (
                       <div className="metric" key={label}>
                         <span>
@@ -249,15 +293,15 @@ export default function App() {
                     {selected ? clock(timeOf(selected)) : "—"}
                   </span>
                 </div>
-                <Pitch selected={selected} visible={visible} />
+                <Pitch selected={selected} visible={visible} teams={teams} />
                 <div className="pitch-footer">
                   <span>
                     <i className="legend home-legend" />
-                    Ashford
+                    {teams[0].name}
                   </span>
                   <span>
                     <i className="legend away-legend" />
-                    Northbridge
+                    {teams[1].name}
                   </span>
                   <small>{t("chain")}</small>
                 </div>
@@ -266,6 +310,7 @@ export default function App() {
                     <button
                       className="play-button"
                       aria-label={t(state.playing ? "pause" : "play")}
+                      disabled={view?.busy}
                       onClick={state.togglePlay}
                     >
                       {state.playing ? (
@@ -275,15 +320,16 @@ export default function App() {
                       )}
                     </button>
                     <strong>{clock(state.second)}</strong>
-                    <span className="duration">/ {clock(fixture.end)}</span>
+                    <span className="duration">/ {clock(end)}</span>
                     <label className="speed">
                       <span className="sr-only">{t("speed")}</span>
                       <select
                         aria-label={t("speed")}
+                        disabled={view?.busy}
                         value={state.speed}
                         onChange={(e) => state.setSpeed(Number(e.target.value))}
                       >
-                        {[1, 4, 12].map((speed) => (
+                        {(view ? [1, 4, 12, 60] : [1, 4, 12]).map((speed) => (
                           <option key={speed} value={speed}>
                             {speed}×
                           </option>
@@ -291,6 +337,7 @@ export default function App() {
                       </select>
                     </label>
                     <button
+                      disabled={view?.busy}
                       className="key-moment"
                       onClick={() => state.seek(3720)}
                     >
@@ -299,17 +346,18 @@ export default function App() {
                     </button>
                   </div>
                   <input
+                    disabled={view?.busy}
                     className="scrubber"
                     type="range"
-                    min={fixture.start}
-                    max={fixture.end}
+                    min={start}
+                    max={end}
                     value={state.second}
                     aria-label={t("scrub")}
                     onChange={(e) => state.seek(Number(e.target.value))}
                   />
                   <div className="range-labels">
-                    <span>{clock(fixture.start)}</span>
-                    <span>{clock(fixture.end)}</span>
+                    <span>{clock(start)}</span>
+                    <span>{clock(end)}</span>
                   </div>
                 </div>
               </section>
@@ -333,14 +381,14 @@ export default function App() {
                       <div className="context-numbers">
                         <div>
                           <strong>
-                            {fixture.context.verified_consecutive_matches}
+                            {context!.verified_consecutive_matches}
                             <span>↗</span>
                           </strong>
                           <small>{t("pattern")}</small>
                         </div>
                         <div>
                           <strong>
-                            {fixture.context.climax!.elapsed_seconds}
+                            {context!.climax!.elapsed_seconds}
                             <span>s</span>
                           </strong>
                           <small>{t("elapsed")}</small>
@@ -351,11 +399,9 @@ export default function App() {
                         <summary>
                           {t("sources")} <ArrowRight size={14} />
                         </summary>
-                        {Object.keys(fixture.context.historical_patterns).map(
-                          (id) => (
-                            <code key={id}>{id}</code>
-                          ),
-                        )}
+                        {Object.keys(context!.historical_patterns).map((id) => (
+                          <code key={id}>{id}</code>
+                        ))}
                       </details>
                     </>
                   )}
@@ -374,7 +420,7 @@ export default function App() {
                       <ChartLineUp size={18} />
                       {t("eventFeed")}
                     </h2>
-                    <p>{t("feedSub")}</p>
+                    <p>{t(view ? "liveFeedSub" : "feedSub")}</p>
                   </div>
                   <span className="subtle-tag">
                     {visible.length} {t("total")}
@@ -382,41 +428,54 @@ export default function App() {
                 </div>
                 <div className="event-list">
                   {visible.length ? (
-                    [...visible].reverse().map((event) => (
-                      <button
-                        key={event.id}
-                        className={`event-row ${event.id === state.selectedId ? "chosen" : ""}`}
-                        onClick={() => state.select(event.id)}
-                        aria-pressed={event.id === state.selectedId}
-                      >
-                        <span className="event-time">
-                          {clock(timeOf(event))}
-                        </span>
-                        <span
-                          className={`event-icon ${event.team_id === fixture.teams[0].id ? "home-text" : "away-text"}`}
+                    [...visible]
+                      .reverse()
+                      .slice(0, timelineLimit)
+                      .map((event) => (
+                        <button
+                          key={event.id}
+                          className={`event-row ${event.id === state.selectedId ? "chosen" : ""}`}
+                          onClick={() => state.select(event.id)}
+                          aria-pressed={event.id === state.selectedId}
                         >
-                          {["shot", "goal"].includes(event.type) ? (
-                            <Target size={18} />
-                          ) : (
-                            <ArrowUpRight size={18} />
-                          )}
-                        </span>
-                        <span className="event-copy">
-                          <strong>
-                            {t(
-                              event.type === "goal" ? "goalEvent" : event.type,
-                            )}{" "}
-                            <span>· {player(event.player_id)?.name}</span>
-                          </strong>
-                          <small>{teamOf(event.team_id)?.name}</small>
-                        </span>
-                        <ArrowRight className="event-arrow" size={16} />
-                      </button>
-                    ))
+                          <span className="event-time">
+                            {clock(timeOf(event))}
+                          </span>
+                          <span
+                            className={`event-icon ${event.team_id === teams[0].id ? "home-text" : "away-text"}`}
+                          >
+                            {["shot", "goal"].includes(event.type) ? (
+                              <Target size={18} />
+                            ) : (
+                              <ArrowUpRight size={18} />
+                            )}
+                          </span>
+                          <span className="event-copy">
+                            <strong>
+                              {t(
+                                event.type === "goal"
+                                  ? "goalEvent"
+                                  : event.type,
+                              )}{" "}
+                              <span>· {player(event.player_id)?.name}</span>
+                            </strong>
+                            <small>{teamOf(event.team_id)?.name}</small>
+                          </span>
+                          <ArrowRight className="event-arrow" size={16} />
+                        </button>
+                      ))
                   ) : (
                     <p className="empty">{t("noEvents")}</p>
                   )}
                 </div>
+                {visible.length > timelineLimit && (
+                  <button
+                    className="history-more"
+                    onClick={() => setTimelineLimit((limit) => limit + 50)}
+                  >
+                    {t("olderEvents")} ({visible.length - timelineLimit})
+                  </button>
+                )}
                 <p className="timeline-note">{t("future")}</p>
               </section>
               <section className="panel event-detail" id="evidence">
@@ -484,9 +543,11 @@ export default function App() {
               </span>
               <div>
                 <strong>{t("notes")}</strong>
-                <p>{t("notesBody")}</p>
+                <p>{t(view ? "serverNotes" : "notesBody")}</p>
               </div>
-              <span className="footer-version">rehearsal-v1</span>
+              <span className="footer-version">
+                {view ? "replay-v1" : "rehearsal-v1"}
+              </span>
             </footer>
           </main>
         </div>

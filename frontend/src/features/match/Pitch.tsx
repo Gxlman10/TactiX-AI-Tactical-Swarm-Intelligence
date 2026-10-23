@@ -1,19 +1,25 @@
 import { useTranslation } from "react-i18next";
 import {
-  displayPoint,
+  displayPoint as fixedPoint,
   fixture,
-  player,
   timeOf,
   type MatchEvent,
+  type Team,
 } from "./model";
 export function Pitch({
   selected,
   visible,
+  teams = fixture.teams,
 }: {
   selected: MatchEvent | undefined;
   visible: MatchEvent[];
+  teams?: Team[];
 }) {
   const { t } = useTranslation();
+  const player = (id: string | null) =>
+    teams.flatMap((team) => team.players).find((player) => player.id === id);
+  const displayPoint = (point: { x: number; y: number }, teamId: string) =>
+    fixedPoint(point, teamId, teams[0].id);
   const chain = selected
     ? visible.filter(
         (e) =>
@@ -23,8 +29,7 @@ export function Pitch({
     : [];
   const point = selected && displayPoint(selected.start, selected.team_id);
   const end = selected?.end && displayPoint(selected.end, selected.team_id);
-  const colour =
-    selected?.team_id === fixture.teams[0].id ? "#c4f568" : "#f2ad82";
+  const colour = selected?.team_id === teams[0].id ? "#c4f568" : "#f2ad82";
   return (
     <svg
       className="pitch"
@@ -135,10 +140,10 @@ export function Pitch({
         </>
       )}
       <text x="0" y="725" fill="#a7afa0" fontSize="14">
-        ASHFORD →
+        {teams[0].name.toUpperCase()} →
       </text>
       <text x="1050" y="725" fill="#a7afa0" fontSize="14" textAnchor="end">
-        ← NORTHBRIDGE
+        ← {teams[1].name.toUpperCase()}
       </text>
     </svg>
   );
