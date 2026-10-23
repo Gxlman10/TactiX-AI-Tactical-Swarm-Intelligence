@@ -5,6 +5,7 @@ import refresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 export default ts.config(
   { ignores: ["dist", "coverage"] },
+  { files: ["scripts/**/*.mjs"], languageOptions: { globals: globals.node } },
   js.configs.recommended,
   ...ts.configs.recommended,
   {

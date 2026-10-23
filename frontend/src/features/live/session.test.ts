@@ -267,6 +267,56 @@ describe("server session integration", () => {
       ),
     ).toThrow();
   });
+  it("does not fetch historical fixtures outside the session evidence", async () => {
+    await client.start(id);
+    await expect(
+      client.history("unrelated-fixture", new AbortController().signal),
+    ).rejects.toThrow("not part of this session");
+    expect(calls.some((call) => call.includes("/history/"))).toBe(false);
+  });
+  it("normalizes historical MatchResult frames into source events", async () => {
+    const historyFetch: typeof fetch = async (input, options) =>
+      String(input).includes("/history/")
+        ? json({
+            match_id: "past",
+            home_club_id: fixture.teams[0].id,
+            away_club_id: fixture.teams[1].id,
+            frames: [{ events: [{ ...fixture.events[0], match_id: "past" }] }],
+          })
+        : fetcher(input, options);
+    client.dispose();
+    client = new LiveSession(
+      new MatchApi("https://backend.test", historyFetch),
+      () => new Source() as unknown as EventSource,
+    );
+    await client.start(id);
+    const artifact = await client.history(
+      Object.keys(fixture.context.historical_patterns)[0],
+      new AbortController().signal,
+    );
+    expect(artifact.events).toHaveLength(1);
+    expect(artifact.events[0].match_id).toBe("past");
+  });
+  it("rejects a historical response from a revision that was replaced while loading", async () => {
+    let release!: (response: Response) => void;
+    const slow: typeof fetch = async (input, options) =>
+      String(input).includes("/history/")
+        ? new Promise((resolve) => {
+            release = resolve;
+          })
+        : fetcher(input, options);
+    client.dispose();
+    client = new LiveSession(
+      new MatchApi("https://backend.test", slow),
+      () => new Source() as unknown as EventSource,
+    );
+    await client.start(id);
+    const fixtureId = Object.keys(fixture.context.historical_patterns)[0];
+    const pending = client.history(fixtureId, new AbortController().signal);
+    await client.control({ action: "seek", second: 3719 });
+    release(json({ match_id: fixtureId, events: [] }));
+    await expect(pending).rejects.toThrow("discard historical response");
+  });
   it("releases a newly created session even when its response arrives after disposal", async () => {
     let release!: (response: Response) => void;
     client.dispose();

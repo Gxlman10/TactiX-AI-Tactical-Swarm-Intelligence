@@ -1,3 +1,7 @@
+import {
+  AnalystPanel,
+  type AnalysisData,
+} from "./features/analyst/AnalystPanel";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -28,6 +32,7 @@ import { useStudio, type Language } from "./features/preferences/store";
 import i18n from "./i18n";
 
 export interface StudioView {
+  analysis?: AnalysisData;
   teams: Team[];
   season: string;
   events: MatchEvent[];
@@ -109,6 +114,10 @@ export default function App({
               <SquaresFour size={20} />
               {t("studio")}
               <span className="tiny-dot" />
+            </a>
+            <a href="#analysis">
+              <ChartLineUp size={20} />
+              {t("lab.title")}
             </a>
             <a href="#evidence">
               <Crosshair size={20} />
@@ -412,6 +421,20 @@ export default function App({
                 </div>
               </aside>
             </div>
+            {state.mode === "analyst" && (
+              <AnalystPanel
+                key={
+                  view?.analysis
+                    ? `${view.analysis.sessionId}:${view.analysis.revision}`
+                    : "offline"
+                }
+                data={view?.analysis}
+                events={visible}
+                teams={teams}
+                second={state.second}
+                onSelect={state.select}
+              />
+            )}
             <div className="evidence-grid">
               <section className="panel timeline">
                 <div className="panel-heading">

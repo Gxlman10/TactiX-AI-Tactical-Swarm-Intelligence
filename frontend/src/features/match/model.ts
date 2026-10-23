@@ -1,3 +1,4 @@
+import type { Pattern } from "../analyst/contracts";
 import raw from "./fixture.json";
 export type Point = { x: number; y: number };
 export interface MatchEvent {
@@ -12,10 +13,13 @@ export interface MatchEvent {
   end: Point | null;
   outcome: string;
   possession_id: string | null;
+  related_player_id?: string | null;
 }
 export type Team = (typeof raw.teams)[number];
 export interface Context {
-  climax: { goal_second: number; elapsed_seconds: number } | null;
+  climax:
+    | ({ goal_second: number; elapsed_seconds: number } & Partial<Pattern>)
+    | null;
   verified_consecutive_matches: number;
   historical_patterns: Record<string, unknown>;
 }

@@ -74,3 +74,21 @@ Review and commit the changed fixture when the source demo changes. Exporting do
 - `src/Experience.tsx`: explicit source selection and subscription to the live controller.
 
 The shell includes loading, error, empty and unknown-route states, keyboard controls, visible focus and reduced-motion handling. Server mode uses the API; offline mode makes no API requests. Tests cover resets, stale replies, paginated history, overlapping SSE delivery, reconnect, rejected controls and resource ownership.
+
+## Evidence lab (Analyst mode)
+
+Connect a backend session and open **Evidence lab**. Eight advanced metrics link directly to their backend definitions and source events. Inspect all remaining metrics in the metrics table. Missing values remain distinct from zero; incomplete evidence coverage is reported without rewriting the backend value.
+
+Explore the directed pass network in **Topology** for readable connections or **Observed positions** for spatial interpretation. The circular layout is explicitly non-spatial; observed positions are pass send/receive means, never player tracking. Curved arrows separate reciprocal connections, link thickness encodes completed passes and node size encodes pass observations. Both SVG targets and ranked lists support keyboard selection. The shot map shows SHOT events once, sizes markers by synthetic xG and distinguishes goals with diamonds. Synthetic xG remains an uncalibrated proxy.
+
+Selecting a metric, connection, player, shot or pattern pins its metric cut while playback can continue. **Return to latest cut** releases it; seeking or resetting the session starts a new revision and clears the inspection. Source actions open an inspection pitch and current-match actions also select the main pitch. Provenance includes session, match, revision, cutoff, possession and event IDs.
+
+The pattern ledger separates historical occurrences from the verified consecutive-match count. Historical sources are loaded from that session's fixture artifact and normalized from frame events. They keep their own teams and match identity, without changing the live clock. Switching selection cancels the request, and late replies cannot populate another revision. Current patterns and evidence remain hidden until their cutoff. The offline 12-event rehearsal explicitly has no advanced snapshot; it does not fabricate these views. No Foundry inference is invoked.
+
+Run the contract smoke against a running backend (Node 24):
+
+```sh
+node scripts/smoke-analyst.mjs http://127.0.0.1:8000
+```
+
+This creates and deletes its own synthetic session, checks cuts immediately before and at 62:00, reconciles metric IDs, directed pass counts, node observations and shot coordinates/xG with source events, and resolves historical pattern evidence from fixture frames. It was also run successfully against the deployed Azure backend. Component tests cover pinned cuts, keyboard inspection, missing/zero values, historical cancellation, revision resets, future-data exclusion and spatial versus topological layouts.

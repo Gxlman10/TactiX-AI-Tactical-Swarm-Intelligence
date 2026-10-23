@@ -57,6 +57,16 @@ function LiveStudio({ onLocal }: { onLocal: () => void }) {
     <Studio
       sessionPanel={panel}
       view={{
+        analysis: {
+          sessionId: data.info.session_id,
+          matchId: state.match_id,
+          revision: state.revision,
+          response: data.metrics,
+          clubs: data.clubs,
+          fixtures: data.fixtures,
+          context: data.context,
+          history: controller.history,
+        },
         teams: data.teams,
         season: data.season,
         events: visibleLiveEvents(data),

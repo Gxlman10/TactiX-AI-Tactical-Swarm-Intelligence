@@ -1,3 +1,4 @@
+import type { TeamAnalysis, FixtureSummary } from "../analyst/contracts";
 import type { MatchEvent, Team, Context } from "../match/model";
 
 export interface ReplayUpdate {
@@ -19,6 +20,7 @@ export interface SessionInfo {
 }
 export interface League {
   season: string;
+  fixtures?: FixtureSummary[];
   clubs: {
     id: string;
     name: string;
@@ -38,7 +40,7 @@ export interface MetricsResponse {
   at_second: number;
   snapshot: {
     match_id: string;
-    teams: { team_id: string; values: { key: string; value: number }[] }[];
+    teams: TeamAnalysis[];
   };
 }
 export type Control =

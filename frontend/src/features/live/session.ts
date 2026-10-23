@@ -1,3 +1,8 @@
+import type {
+  HistoricalMatch,
+  HistoricalArtifact,
+  FixtureSummary,
+} from "../analyst/contracts";
 import {
   MatchApi,
   ApiError,
@@ -18,6 +23,8 @@ export interface LiveState {
   connection: Connection;
   info: SessionInfo | null;
   teams: Team[];
+  clubs: Team[];
+  fixtures: FixtureSummary[];
   season: string;
   events: ReplayUpdate["events"];
   metrics: MetricsResponse | null;
@@ -31,6 +38,8 @@ const initial = (): LiveState => ({
   connection: "idle",
   info: null,
   teams: [],
+  clubs: [],
+  fixtures: [],
   season: "",
   events: [],
   metrics: null,
@@ -73,9 +82,13 @@ export class LiveSession {
   private current(generation: number) {
     return generation === this.generation && !this.abort.signal.aborted;
   }
-  private async get<T>(path: string) {
+  private async get<T>(path: string, signal?: AbortSignal) {
     return this.api.request<T>(path, {
-      signal: AbortSignal.any([this.abort.signal, AbortSignal.timeout(20000)]),
+      signal: AbortSignal.any([
+        this.abort.signal,
+        AbortSignal.timeout(20000),
+        ...(signal ? [signal] : []),
+      ]),
     });
   }
   dispose = () => {
@@ -130,7 +143,18 @@ export class LiveSession {
           players: club.squad,
         };
       });
-      this.set({ teams, season: league.season });
+      this.set({
+        teams,
+        season: league.season,
+        fixtures: league.fixtures ?? [],
+        clubs: league.clubs.map((club) => ({
+          id: club.id,
+          name: club.name,
+          city: club.city,
+          formation: club.tactical_identity.formation,
+          players: club.squad,
+        })),
+      });
       if (!joinId) {
         const update = await this.api.control(info.session_id, {
           action: "seek",
@@ -401,6 +425,40 @@ export class LiveSession {
       }
     }
   }
+  history = async (
+    fixtureId: string,
+    signal: AbortSignal,
+  ): Promise<HistoricalMatch> => {
+    const info = this.state.info;
+    if (
+      !info ||
+      !Object.hasOwn(this.state.context?.historical_patterns ?? {}, fixtureId)
+    )
+      throw new Error(
+        "Historical fixture is not part of this session's evidence",
+      );
+    const generation = this.generation;
+    const revision = info.state.revision;
+    const artifact = await this.get<HistoricalArtifact>(
+      `/sessions/${info.session_id}/history/${encodeURIComponent(fixtureId)}`,
+      signal,
+    );
+    if (
+      !this.current(generation) ||
+      this.state.info?.state.revision !== revision ||
+      signal.aborted
+    )
+      throw new Error("Timeline changed; discard historical response");
+    if (
+      !Array.isArray(artifact.frames) ||
+      !artifact.frames.every((frame) => Array.isArray(frame.events))
+    )
+      throw new Error("Historical artifact has no valid event frames");
+    return {
+      ...artifact,
+      events: artifact.frames.flatMap((frame) => frame.events),
+    };
+  };
   select = (id: string) => {
     if (this.state.events.some((item) => item.event.id === id)) {
       this.following = false;

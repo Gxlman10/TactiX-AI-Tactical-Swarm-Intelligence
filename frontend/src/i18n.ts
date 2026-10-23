@@ -1,6 +1,8 @@
+import { labEn, labEs } from "./features/analyst/translations";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 const en = {
+  lab: labEn,
   olderEvents: "Show earlier actions",
   loadingHistory: "Loading visible history…",
   connection: "Match connection",
@@ -126,6 +128,7 @@ const en = {
   evidenceHint: "Choose an action in the timeline to inspect its source.",
 };
 const es: typeof en = {
+  lab: labEs,
   olderEvents: "Ver acciones anteriores",
   loadingHistory: "Cargando historial visible…",
   connection: "Conexión del partido",
