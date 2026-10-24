@@ -46,6 +46,11 @@ it("renders a server view using server score and missing values without fixture 
   expect(
     screen.queryByText("A familiar weakness, exposed again."),
   ).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Fan" }));
+  expect(screen.getByRole("slider", { name: "Match clock" })).toHaveValue("3600");
+  expect(screen.queryByRole("region", { name: "Match metrics" })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Analyst" }));
+  expect(screen.getByRole("region", { name: "Match metrics" })).toBeInTheDocument();
   expect(screen.getByRole("slider", { name: "Match clock" })).toBeDisabled();
   expect(screen.getByRole("button", { name: "Play clip" })).toBeDisabled();
 });

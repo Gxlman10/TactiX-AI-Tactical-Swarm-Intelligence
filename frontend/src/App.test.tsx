@@ -57,6 +57,18 @@ it("updates the favourite club and focus player preferences", () => {
   expect(screen.getByRole("heading", { name: focus.name })).toBeInTheDocument();
   expect(screen.getByText("The rating is a transparent event-based proxy until live Personalizer output is connected.")).toBeInTheDocument();
 });
+it("switches Analyst and Fan on the same live moment", () => {
+  render(<App />);
+  const before = useStudio.getState();
+  fireEvent.click(screen.getByRole("button", { name: "Fan" }));
+  expect(useStudio.getState().second).toBe(before.second);
+  expect(useStudio.getState().selectedId).toBe(before.selectedId);
+  expect(screen.queryByRole("region", { name: "Match metrics" })).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Analyst" }));
+  expect(useStudio.getState().second).toBe(before.second);
+  expect(useStudio.getState().selectedId).toBe(before.selectedId);
+  expect(screen.getByRole("region", { name: "Match metrics" })).toBeInTheDocument();
+});
 it("removes future climax context when scrubbing backwards", () => {
   render(<App />);
   fireEvent.change(screen.getByRole("slider", { name: "Match clock" }), {
