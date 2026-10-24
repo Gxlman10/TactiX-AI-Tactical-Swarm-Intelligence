@@ -14,6 +14,7 @@ import {
   type MetricsResponse,
   type ApiContext,
   type Control,
+  type MatchReportRun,
 } from "./api";
 import { timeOf, type MatchEvent, type Team } from "../match/model";
 
@@ -33,6 +34,8 @@ export interface LiveState {
   busy: boolean;
   rebuilding: boolean;
   error: string;
+  report: MatchReportRun | null;
+  analyzing: boolean;
 }
 const initial = (): LiveState => ({
   connection: "idle",
@@ -48,6 +51,8 @@ const initial = (): LiveState => ({
   busy: false,
   rebuilding: false,
   error: "",
+  report: null,
+  analyzing: false,
 });
 
 /** Owns one browser subscription, not the shared match clock. */
@@ -423,6 +428,20 @@ export class LiveSession {
         this.controlPending = false;
         this.set({ busy: false });
       }
+    }
+  }
+  async analyze() {
+    if (!this.state.info || this.state.analyzing) return;
+    const generation = this.generation;
+    this.set({ analyzing: true, error: "" });
+    try {
+      const report = await this.api.analyze(this.state.info.session_id);
+      if (this.current(generation)) this.set({ report });
+    } catch (error) {
+      if (this.current(generation))
+        this.set({ error: error instanceof Error ? error.message : "Analysis failed" });
+    } finally {
+      if (this.current(generation)) this.set({ analyzing: false });
     }
   }
   history = async (

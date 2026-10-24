@@ -9,7 +9,7 @@ from sse_starlette.sse import EventSourceResponse
 from starlette.background import BackgroundTask
 from starlette.concurrency import run_in_threadpool
 
-from tactix.agents.foundry import SpecialistRun, require_foundry_configuration, run_specialists
+from tactix.agents.foundry import require_foundry_configuration
 from tactix.agents.tools import EvidenceTools
 from tactix.api.sessions import CreateSession, SessionInfo, SessionStore
 from tactix.config import settings
@@ -18,6 +18,7 @@ from tactix.domain.metrics import MetricsSnapshot
 from tactix.domain.universe import League
 from tactix.simulation.engine import MatchResult
 from tactix.simulation.replay import ReplayEvent, ReplayUpdate
+from tactix.workflows.orchestration import MatchReportRun, run_match_report
 
 router = APIRouter(prefix="/api/v1", tags=["match sessions"])
 
@@ -90,7 +91,7 @@ async def session_info(request: Request, session_id: str):
     return store(request).get(session_id).info()
 
 
-@router.post("/sessions/{session_id}/analyze", response_model=SpecialistRun)
+@router.post("/sessions/{session_id}/analyze", response_model=MatchReportRun)
 async def analyze_session(request: Request, session_id: str):
     session = store(request).get(session_id)
     try:
@@ -118,7 +119,7 @@ async def analyze_session(request: Request, session_id: str):
             raise HTTPException(404, "Unknown or expired session")
         if session.player.snapshot().revision != state.revision:
             raise HTTPException(409, "Timeline changed before analysis; retry")
-        result = await run_specialists(scope, settings)
+        result = await run_match_report(scope, settings)
         if session.closed:
             raise HTTPException(404, "Unknown or expired session")
         if session.player.snapshot().revision != state.revision:

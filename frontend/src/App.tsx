@@ -30,10 +30,13 @@ import {
 } from "./features/match/model";
 import { useStudio, type Language } from "./features/preferences/store";
 import { FocusPlayerPanel } from "./features/preferences/FocusPlayerPanel";
+import { ProvenanceParagraph } from "./features/analyst/ProvenanceParagraph";
+import type { MatchReportRun } from "./features/live/api";
 import i18n from "./i18n";
 
 export interface StudioView {
   analysis?: AnalysisData;
+  report?: MatchReportRun | null;
   teams: Team[];
   season: string;
   events: MatchEvent[];
@@ -236,6 +239,18 @@ export default function App({
               events={visible}
               second={state.second}
             />
+            {state.report?.report.narration && (
+              <ProvenanceParagraph
+                moments={[
+                  ...state.report.report.narration.play_by_play,
+                  ...state.report.report.narration.key_moments,
+                ]}
+                findings={[
+                  ...state.report.context.analyst_findings,
+                  ...state.report.context.historian_findings,
+                ]}
+              />
+            )}
             <section className="scoreboard" aria-label={t("match")}>
               <div className="competition">
                 <span className="competition-mark">

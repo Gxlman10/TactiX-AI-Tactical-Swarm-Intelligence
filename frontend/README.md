@@ -54,6 +54,8 @@ The production output is in `dist/`. CI runs a clean install, lint, tests and th
 
 The context panel is explicitly labelled as a scripted preview. Neither a live SSE connection nor agent/model inference is active. Synthetic xG is an uncalibrated deterministic proxy, not a trained probability model.
 
+When connected to the backend, **Analyze match** calls `POST /api/v1/sessions/{session_id}/analyze` and renders the Narrator's source-finding provenance. This requires the backend's Microsoft Foundry project, deployment and Entra authentication to be configured. Without Foundry, the UI and tests can be validated with fixtures, but a live agent smoke test remains pending.
+
 ## Data and structure
 
 `src/features/match/fixture.json` contains 12 events and 121 metric cuts exported from the backend's validated `ashford-demo-v1`. Metric cuts are computed by backend code, never by a model or browser narrative. To regenerate from the repository root:
