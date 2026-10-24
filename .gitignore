@@ -42,7 +42,8 @@ frontend/dist/
 frontend/build/
 
 # --- Generated data ---
-# Synthetic datasets are reproducible from seed + manifest; don't version the output.
+# Routine generated datasets stay local. The audited demo fallback under
+# data/recordings/ is deliberately versioned with its integrity manifest.
 data/generated/
 *.sqlite
 *.sqlite3

@@ -5,6 +5,10 @@ the event-backed historical hook for the future Analyst → Historian → Narrat
 handoff. It does not pretend that a seeded random simulation naturally produced
 the planted story, and it does not implement the agents themselves.
 
+## Committed recording fallback
+
+A complete verified recording is committed in [data/recordings/ashford-demo-v1](../data/recordings/ashford-demo-v1/README.md). It contains all 649 live events, four historical artifacts and nine temporal checkpoints. `python -m tactix.demo.recording` can verify integrity and event-derived semantics, compare against regeneration, emit repeatable clip updates or extract the match for paced playback. This is a deterministic synthetic fallback; no agent inference or video is recorded. See its guide for tested commands and exact cutoff expectations.
+
 ## Reproduce and play
 
 From `backend/`, export into a new directory:
