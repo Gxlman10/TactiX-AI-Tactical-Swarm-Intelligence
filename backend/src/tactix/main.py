@@ -28,10 +28,11 @@ async def lifespan(application: FastAPI):
 app = FastAPI(title=settings.app_name, version=__version__, lifespan=lifespan)
 app.include_router(router)
 
-# Permissive during development; tightened for the Azure deployment.
+# Use `TACTIX_CORS_ORIGINS` as a comma-separated list in production. The default wildcard
+# keeps local development and the standalone static container usable without configuration.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_origin_list(),
     allow_methods=["*"],
     allow_headers=["*"],
 )

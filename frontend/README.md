@@ -21,7 +21,21 @@ $env:VITE_API_BASE='https://tactix-backend.blackcliff-8260e62c.brazilsouth.azure
 npm run dev -- --port 5174
 ```
 
-This flow was exercised against Azure, including creation, seek, SSE and metrics. Alternatively copy `.env.example` to `.env.local` and set the same public origin. Restart Vite after changing it. Without a value, the development `/api` proxy targets `http://127.0.0.1:8000`. `VITE_API_BASE` must omit `/api/v1`; it is embedded at build time, including production builds. It is public configuration, never a place for credentials. Production hosting must serve the same API path or supply a backend origin with appropriate CORS; frontend hosting is a separate task.
+This flow was exercised against Azure, including creation, seek, SSE and metrics. Alternatively copy `.env.example` to `.env.local` and set the same public origin. Restart Vite after changing it. Without a value, the development `/api` proxy targets `http://127.0.0.1:8000`. `VITE_API_BASE` must omit `/api/v1`; it is embedded at build time, including production builds. It is public configuration, never a place for credentials.
+
+### Production container
+
+Build and run the static frontend with the deployed API origin:
+
+```sh
+docker build --build-arg VITE_API_BASE=https://your-backend.example.com -t tactix-frontend ./frontend
+docker run --rm -p 8080:80 tactix-frontend
+```
+
+The image serves the Vite bundle with an SPA fallback and exposes `/health`. For a deployed
+frontend origin, configure the backend with `TACTIX_CORS_ORIGINS=https://your-frontend.example.com`
+(multiple origins are comma-separated). The container has no credentials; `VITE_API_BASE` is
+public build-time configuration.
 
 ## Server session behavior
 

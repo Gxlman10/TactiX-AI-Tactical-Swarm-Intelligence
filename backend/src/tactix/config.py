@@ -18,6 +18,8 @@ class Settings(BaseSettings):
 
     app_name: str = "TactiX"
     environment: str = "local"
+    # Comma-separated browser origins; `*` keeps local development frictionless.
+    cors_origins: str = "*"
 
     # Persistence
     database_url: str = "postgresql+psycopg://tactix:tactix@localhost:5432/tactix"
@@ -35,6 +37,9 @@ class Settings(BaseSettings):
 
     # Product
     default_language: str = "en"
+
+    def cors_origin_list(self) -> list[str]:
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
 
 settings = Settings()
