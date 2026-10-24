@@ -165,6 +165,42 @@ export default function App({
                   <option value="es">ES</option>
                 </select>
               </label>
+              <label className="preference-select">
+                <span>{t("favoriteClub")}</span>
+                <select
+                  aria-label={t("favoriteClub")}
+                  value={state.favoriteTeamId ?? ""}
+                  onChange={(event) =>
+                    state.setFavoriteTeam(event.target.value || null)
+                  }
+                >
+                  <option value="">{t("noFavoriteClub")}</option>
+                  {teams.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="preference-select">
+                <span>{t("focusPlayer")}</span>
+                <select
+                  aria-label={t("focusPlayer")}
+                  value={state.focusPlayerId ?? ""}
+                  onChange={(event) =>
+                    state.setFocusPlayer(event.target.value || null)
+                  }
+                >
+                  <option value="">{t("noFocusPlayer")}</option>
+                  {teams.flatMap((team) =>
+                    team.players.map((player) => (
+                      <option key={player.id} value={player.id}>
+                        {player.name} · {team.name}
+                      </option>
+                    )),
+                  )}
+                </select>
+              </label>
             </div>
           </header>
           <main id="main">

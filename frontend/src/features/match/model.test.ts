@@ -37,6 +37,8 @@ describe("studio state", () => {
       playing: false,
       mode: "analyst",
       language: "en",
+      favoriteTeamId: null,
+      focusPlayerId: null,
       speed: 4,
     });
   });
@@ -105,6 +107,20 @@ describe("studio state", () => {
   it("persists preferences rather than stale clocks", () => {
     useStudio.getState().setLanguage("es");
     const saved = JSON.parse(localStorage.getItem("tactix-preferences-v1")!);
-    expect(saved.state).toEqual({ language: "es", mode: "analyst" });
+    expect(saved.state).toEqual({
+      language: "es",
+      mode: "analyst",
+      favoriteTeamId: null,
+      focusPlayerId: null,
+    });
+  });
+  it("persists the selected favourite club and focus player", () => {
+    useStudio.getState().setFavoriteTeam("ashford");
+    useStudio.getState().setFocusPlayer("hartley");
+    expect(useStudio.getState().favoriteTeamId).toBe("ashford");
+    expect(useStudio.getState().focusPlayerId).toBe("hartley");
+    const saved = JSON.parse(localStorage.getItem("tactix-preferences-v1")!);
+    expect(saved.state.favoriteTeamId).toBe("ashford");
+    expect(saved.state.focusPlayerId).toBe("hartley");
   });
 });

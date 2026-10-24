@@ -6,12 +6,16 @@ export type Mode = "analyst" | "fan";
 type StudioState = {
   language: Language;
   mode: Mode;
+  favoriteTeamId: string | null;
+  focusPlayerId: string | null;
   second: number;
   selectedId: string | null;
   playing: boolean;
   speed: number;
   setLanguage: (language: Language) => void;
   setMode: (mode: Mode) => void;
+  setFavoriteTeam: (teamId: string | null) => void;
+  setFocusPlayer: (playerId: string | null) => void;
   seek: (second: number) => void;
   select: (id: string) => void;
   togglePlay: () => void;
@@ -24,12 +28,16 @@ export const useStudio = create<StudioState>()(
     (set, get) => ({
       language: "en",
       mode: "analyst",
+      favoriteTeamId: null,
+      focusPlayerId: null,
       second: fixture.initial,
       selectedId: lastAt(fixture.initial),
       playing: false,
       speed: 4,
       setLanguage: (language) => set({ language }),
       setMode: (mode) => set({ mode }),
+      setFavoriteTeam: (favoriteTeamId) => set({ favoriteTeamId }),
+      setFocusPlayer: (focusPlayerId) => set({ focusPlayerId }),
       seek: (value) => {
         if (!Number.isFinite(value)) return;
         const second = Math.max(
@@ -69,7 +77,12 @@ export const useStudio = create<StudioState>()(
     {
       name: "tactix-preferences-v1",
       storage: createJSONStorage(() => localStorage),
-      partialize: ({ language, mode }) => ({ language, mode }),
+      partialize: ({ language, mode, favoriteTeamId, focusPlayerId }) => ({
+        language,
+        mode,
+        favoriteTeamId,
+        focusPlayerId,
+      }),
       merge: (saved, current) => {
         const data =
           saved && typeof saved === "object"
@@ -79,6 +92,12 @@ export const useStudio = create<StudioState>()(
           ...current,
           language: data.language === "es" ? "es" : "en",
           mode: data.mode === "fan" ? "fan" : "analyst",
+          favoriteTeamId:
+            typeof data.favoriteTeamId === "string"
+              ? data.favoriteTeamId
+              : null,
+          focusPlayerId:
+            typeof data.focusPlayerId === "string" ? data.focusPlayerId : null,
         };
       },
     },
