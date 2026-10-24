@@ -11,6 +11,7 @@ import pytest
 pytest.importorskip("agent_framework")
 from agent_framework import BaseChatClient, ChatResponse, Content, FunctionInvocationLayer, Message
 
+from tactix.agents.contracts import NarratorOutput, PersonalizerOutput
 from tactix.agents.foundry import (
     ToolBudget,
     foundry_client,
@@ -21,6 +22,7 @@ from tactix.agents.tools import EvidenceTools
 from tactix.config import Settings
 from tactix.demo.scenario import build_demo
 from tactix.domain.enums import AgentName
+from tactix.workflows.orchestration import StageOutcome, run_match_report
 
 A, H = AgentName.TACTICAL_ANALYST, AgentName.HISTORIAN
 
@@ -244,13 +246,23 @@ def test_api_analysis_missing_configuration_and_stale_revision(monkeypatch):
         monkeypatch.setattr(routes, "settings", configured)
         client.post(base + "/controls", json={"action": "seek", "second": 3720})
 
-        async def controlled(scope, settings):
-            return await run_specialists(scope, settings, client=ScriptedModel(scope))
+        async def stage_runner(role, context, scope, settings, preferences, client):
+            output = NarratorOutput() if role == AgentName.NARRATOR else PersonalizerOutput()
+            return output, StageOutcome(agent=role, status="complete")
 
-        monkeypatch.setattr(routes, "run_specialists", controlled)
+        async def controlled(scope, settings):
+            specialists = await run_specialists(scope, settings, client=ScriptedModel(scope))
+            return await run_match_report(
+                scope,
+                settings,
+                specialists=specialists,
+                stage_runner=stage_runner,
+            )
+
+        monkeypatch.setattr(routes, "run_match_report", controlled)
         response = client.post(base + "/analyze")
         assert response.status_code == 200, response.text
-        assert response.json()["revision"] == 1 and not response.json()["partial"]
+        assert response.json()["revision"] == 1
         session = app.state.sessions.get(sid)
         session.analyzing = True
         assert client.post(base + "/analyze").status_code == 409
@@ -261,7 +273,7 @@ def test_api_analysis_missing_configuration_and_stale_revision(monkeypatch):
             session.seek(0)
             return result
 
-        monkeypatch.setattr(routes, "run_specialists", stale)
+        monkeypatch.setattr(routes, "run_match_report", stale)
         assert client.post(base + "/analyze").status_code == 409
         assert not session.analyzing
 

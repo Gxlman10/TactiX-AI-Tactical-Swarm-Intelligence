@@ -17,7 +17,8 @@ def distance(start: Point, end: Point) -> float:
 
 
 def direction(start: Point, end: Point) -> float:
-    return math.atan2((end.y - start.y) * 0.68, (end.x - start.x) * 1.05)
+    # Keep authored recordings byte-stable across Python/libm implementations.
+    return round(math.atan2((end.y - start.y) * 0.68, (end.x - start.x) * 1.05), 15)
 
 
 def shot_angle(point: Point) -> float:

@@ -7,6 +7,7 @@ import threading
 import time
 
 import httpx
+import pytest
 import uvicorn
 
 from tactix.main import app
@@ -24,6 +25,7 @@ async def packets(response):
             fields[name] = value
 
 
+@pytest.mark.integration
 async def test_socket_broadcast_and_last_event_id_recovery():
     listener = socket.socket()
     listener.bind(("127.0.0.1", 0))
