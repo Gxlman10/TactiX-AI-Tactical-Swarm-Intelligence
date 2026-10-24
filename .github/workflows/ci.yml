@@ -8,6 +8,7 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     services:
       postgres:
         image: postgres:16
@@ -34,7 +35,10 @@ jobs:
           python-version: "3.12"
       - run: uv sync --locked --dev --extra agents
       - run: uv run --extra agents ruff check .
-      - run: uv run --extra agents pytest -q
+      - name: Unit tests
+        run: uv run --extra agents pytest -q -m 'not integration'
+      - name: HTTP/SSE integration tests
+        run: timeout 90s uv run --extra agents pytest -vv -m integration
 
   frontend:
     runs-on: ubuntu-latest

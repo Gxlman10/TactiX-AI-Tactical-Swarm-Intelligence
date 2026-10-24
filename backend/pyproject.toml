@@ -51,3 +51,6 @@ select = ["E", "F", "I", "UP", "B"]
 pythonpath = ["src"]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+markers = [
+    "integration: exercises the real HTTP/SSE socket boundary",
+]
