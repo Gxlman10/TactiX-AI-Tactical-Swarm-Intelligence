@@ -1635,6 +1635,26 @@ input:disabled {
   color: var(--muted, #88909d);
   font-size: 0.75rem;
 }
+.provenance-paragraph {
+  margin-top: 1rem;
+}
+.provenance-copy {
+  line-height: 1.9;
+}
+.provenance-sentence {
+  cursor: help;
+  border-bottom: 1px dashed var(--accent, #9bff80);
+  outline: none;
+}
+.provenance-sentence:focus,
+.provenance-sentence:hover {
+  background: rgba(155, 255, 128, 0.1);
+}
+.provenance-sentence small {
+  color: var(--accent, #9bff80);
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
 @media (max-width: 700px) {
   .focus-grid {
     grid-template-columns: 1fr;
