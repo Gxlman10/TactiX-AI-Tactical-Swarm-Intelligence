@@ -54,6 +54,8 @@ it("updates the favourite club and focus player preferences", () => {
   expect(
     JSON.parse(localStorage.getItem("tactix-preferences-v1")!).state,
   ).toMatchObject({ favoriteTeamId: club.id, focusPlayerId: focus.id });
+  expect(screen.getByRole("heading", { name: focus.name })).toBeInTheDocument();
+  expect(screen.getByText("The rating is a transparent event-based proxy until live Personalizer output is connected.")).toBeInTheDocument();
 });
 it("removes future climax context when scrubbing backwards", () => {
   render(<App />);

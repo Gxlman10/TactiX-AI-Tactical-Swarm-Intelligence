@@ -29,6 +29,7 @@ import {
   type Context,
 } from "./features/match/model";
 import { useStudio, type Language } from "./features/preferences/store";
+import { FocusPlayerPanel } from "./features/preferences/FocusPlayerPanel";
 import i18n from "./i18n";
 
 export interface StudioView {
@@ -229,6 +230,12 @@ export default function App({
                 ))}
               </div>
             </section>
+            <FocusPlayerPanel
+              playerId={state.focusPlayerId}
+              teams={teams}
+              events={visible}
+              second={state.second}
+            />
             <section className="scoreboard" aria-label={t("match")}>
               <div className="competition">
                 <span className="competition-mark">
