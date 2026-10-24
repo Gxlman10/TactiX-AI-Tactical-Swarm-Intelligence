@@ -43,6 +43,33 @@ export interface MetricsResponse {
     teams: TeamAnalysis[];
   };
 }
+export interface NarrativeMoment {
+  minute: number;
+  text: string;
+  source_finding_ids: string[];
+}
+export interface NarrativeFinding {
+  id: string;
+  agent: "analyst" | "historian";
+  claim: string;
+}
+export interface MatchReportRun {
+  match_id: string;
+  at_second: number;
+  revision: number;
+  context: {
+    analyst_findings: NarrativeFinding[];
+    historian_findings: NarrativeFinding[];
+  };
+  report: {
+    narration: {
+      play_by_play: NarrativeMoment[];
+      recap: string;
+      key_moments: NarrativeMoment[];
+    } | null;
+  };
+  partial: boolean;
+}
 export type Control =
   | { action: "play" | "pause" }
   | { action: "seek"; second: number }
@@ -107,6 +134,11 @@ export class MatchApi {
       method: "POST",
       signal: AbortSignal.timeout(20000),
       body: JSON.stringify(control),
+    });
+  }
+  analyze(id: string) {
+    return this.request<MatchReportRun>(`/sessions/${encodeURIComponent(id)}/analyze`, {
+      method: "POST",
     });
   }
 }

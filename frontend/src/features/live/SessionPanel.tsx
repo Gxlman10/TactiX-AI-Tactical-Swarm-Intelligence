@@ -73,6 +73,11 @@ export function SessionPanel(props: {
           {t("reconnect")}
         </button>
       )}
+      {data?.connection === "connected" && (
+        <button disabled={data.analyzing} onClick={() => void controller!.analyze()}>
+          {t(data.analyzing ? "analyzing" : "analyzeMatch")}
+        </button>
+      )}
       {initial && (
         <form
           onSubmit={(event) => {

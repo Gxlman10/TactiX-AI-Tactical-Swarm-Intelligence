@@ -85,8 +85,10 @@ The response includes both findings lists, degraded roles and diagnostic codes.
 - 200: validated complete or explicitly partial result. Check partial and degraded;
   authentication/provider errors can produce partial=true even with configuration.
 
-Only one analysis per session can run at a time. Use event windows or meaningful
-moments, not every SSE tick. Existing session capacity limits still apply. Request
+Only one analysis per session can run at a time. The shared activation policy in
+`tactix.agents.activation` permits an initial cut, a newly observed goal, a material
+momentum shift, or a crossed five-minute window; ordinary events only refresh metrics.
+Use those triggers rather than every SSE tick. Existing session capacity limits still apply. Request
 cancellation propagates into the concurrent model tasks and clears the active flag.
 Playback may advance while inference runs; the result always carries its captured
 at_second and revision. A completed old cut on the same revision is a historical

@@ -29,10 +29,14 @@ import {
   type Context,
 } from "./features/match/model";
 import { useStudio, type Language } from "./features/preferences/store";
+import { FocusPlayerPanel } from "./features/preferences/FocusPlayerPanel";
+import { ProvenanceParagraph } from "./features/analyst/ProvenanceParagraph";
+import type { MatchReportRun } from "./features/live/api";
 import i18n from "./i18n";
 
 export interface StudioView {
   analysis?: AnalysisData;
+  report?: MatchReportRun | null;
   teams: Team[];
   season: string;
   events: MatchEvent[];
@@ -165,6 +169,42 @@ export default function App({
                   <option value="es">ES</option>
                 </select>
               </label>
+              <label className="preference-select">
+                <span>{t("favoriteClub")}</span>
+                <select
+                  aria-label={t("favoriteClub")}
+                  value={state.favoriteTeamId ?? ""}
+                  onChange={(event) =>
+                    state.setFavoriteTeam(event.target.value || null)
+                  }
+                >
+                  <option value="">{t("noFavoriteClub")}</option>
+                  {teams.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="preference-select">
+                <span>{t("focusPlayer")}</span>
+                <select
+                  aria-label={t("focusPlayer")}
+                  value={state.focusPlayerId ?? ""}
+                  onChange={(event) =>
+                    state.setFocusPlayer(event.target.value || null)
+                  }
+                >
+                  <option value="">{t("noFocusPlayer")}</option>
+                  {teams.flatMap((team) =>
+                    team.players.map((player) => (
+                      <option key={player.id} value={player.id}>
+                        {player.name} · {team.name}
+                      </option>
+                    )),
+                  )}
+                </select>
+              </label>
             </div>
           </header>
           <main id="main">
@@ -193,6 +233,24 @@ export default function App({
                 ))}
               </div>
             </section>
+            <FocusPlayerPanel
+              playerId={state.focusPlayerId}
+              teams={teams}
+              events={visible}
+              second={state.second}
+            />
+            {state.report?.report.narration && (
+              <ProvenanceParagraph
+                moments={[
+                  ...state.report.report.narration.play_by_play,
+                  ...state.report.report.narration.key_moments,
+                ]}
+                findings={[
+                  ...state.report.context.analyst_findings,
+                  ...state.report.context.historian_findings,
+                ]}
+              />
+            )}
             <section className="scoreboard" aria-label={t("match")}>
               <div className="competition">
                 <span className="competition-mark">

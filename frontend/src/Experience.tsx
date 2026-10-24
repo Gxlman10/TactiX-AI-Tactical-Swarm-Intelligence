@@ -67,6 +67,7 @@ function LiveStudio({ onLocal }: { onLocal: () => void }) {
           context: data.context,
           history: controller.history,
         },
+        report: data.report,
         teams: data.teams,
         season: data.season,
         events: visibleLiveEvents(data),
