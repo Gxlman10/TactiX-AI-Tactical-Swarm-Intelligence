@@ -27,10 +27,9 @@ from tactix.agents.contracts import (
     PersonalizerOutput,
     Preferences,
 )
-from tactix.agents.foundry import (
+from tactix.agents.runtime import (
     SpecialistRun,
-    foundry_client,
-    invocation_limits,
+    apply_invocation_limits,
     run_specialists,
 )
 from tactix.agents.tools import EvidenceTools
@@ -158,8 +157,8 @@ async def _maf_language_stage(
             failure="invalid_output",
         )
     try:
-        async with asyncio.timeout(settings.foundry_timeout_seconds):
-            for attempts in range(1, settings.foundry_max_attempts + 1):
+        async with asyncio.timeout(settings.model_timeout_seconds):
+            for attempts in range(1, settings.model_max_attempts + 1):
                 agent = Agent(
                     client=client,
                     name=role.value,
@@ -177,7 +176,7 @@ async def _maf_language_stage(
                         message,
                         options={
                             "response_format": SPECS[role].output,
-                            "max_tokens": settings.foundry_max_tokens,
+                            "max_tokens": settings.model_max_tokens,
                             "store": False,
                         },
                     )
@@ -234,24 +233,26 @@ async def run_match_report(
     """Drive the whole swarm to a final report.
 
     ``specialists`` can be supplied to reuse a completed fan-out; ``stage_runner`` overrides
-    the Narrator/Personalizer executor. When both are supplied the real Foundry provider is
-    never constructed, which is what lets the orchestration be tested offline.
+    the Narrator/Personalizer executor. When both are supplied no model provider is ever
+    constructed, which is what lets the orchestration be tested offline.
     """
     preferences = preferences or Preferences()
     runner = stage_runner or _maf_language_stage
     needs_provider = client is None and (specialists is None or stage_runner is None)
     if needs_provider:
-        async with foundry_client(settings) as provider:
+        from tactix.agents.providers import get_provider
+
+        async with get_provider(settings).client(settings) as resolved:
             return await run_match_report(
                 scope,
                 settings,
                 preferences,
-                client=provider,
+                client=resolved,
                 specialists=specialists,
                 stage_runner=stage_runner,
             )
     if client is not None:
-        client.function_invocation_configuration.update(invocation_limits(settings))
+        apply_invocation_limits(client, settings)
 
     run = specialists or await run_specialists(scope, settings, client=client)
     context = run.context.model_copy(deep=True)

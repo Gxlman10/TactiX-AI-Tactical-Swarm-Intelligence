@@ -9,7 +9,7 @@ from sse_starlette.sse import EventSourceResponse
 from starlette.background import BackgroundTask
 from starlette.concurrency import run_in_threadpool
 
-from tactix.agents.foundry import require_foundry_configuration
+from tactix.agents.providers import get_provider
 from tactix.agents.tools import EvidenceTools
 from tactix.api.sessions import CreateSession, SessionInfo, SessionStore
 from tactix.config import settings
@@ -95,10 +95,10 @@ async def session_info(request: Request, session_id: str):
 async def analyze_session(request: Request, session_id: str):
     session = store(request).get(session_id)
     try:
-        require_foundry_configuration(settings)
+        get_provider(settings).validate_configuration(settings)
     except ValueError:
         raise HTTPException(
-            503, "Configure Foundry project, deployment and Entra authentication"
+            503, "Configure a model provider (e.g. Foundry project, deployment and authentication)"
         ) from None
     if session.analyzing:
         raise HTTPException(409, "Analysis is already running for this session")

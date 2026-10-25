@@ -10,7 +10,7 @@ report assembly is checked against the real contract, not a loosened one.
 import pytest
 
 from tactix.agents.contracts import NarratorOutput, PersonalizerOutput
-from tactix.agents.foundry import AgentExecution, SpecialistRun
+from tactix.agents.runtime import AgentExecution, SpecialistRun
 from tactix.agents.tools import EvidenceTools
 from tactix.config import Settings
 from tactix.demo.scenario import build_demo
