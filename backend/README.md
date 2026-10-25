@@ -8,7 +8,7 @@ Python + FastAPI. Layers: `universe/` and `simulation/` (synthetic data), `metri
 
 ```bash
 uv sync                 # base env (Python 3.12, pinned via .python-version)
-uv sync --extra agents  # add Microsoft Agent Framework + Foundry when you work on Layer 3
+uv sync --extra agents  # optional: Agent Framework + a model-provider adapter for live agents (Layer 3)
 uv run uvicorn tactix.main:app --reload
 uv run pytest
 uv run ruff check .
@@ -22,7 +22,8 @@ uv run pytest tests/unit/test_baseline.py -q
 
 `tactix.agents.baseline.build_baseline_request` sends the same frozen metrics, visible events
 and fixture summaries to one tool-free prompt. It does not run inference locally; producing a
-live baseline response still requires the Microsoft Foundry endpoint and model deployment.
+live baseline response requires a configured model provider (the optional Foundry adapter, or
+another provider) — it is not required to build or test the project.
 
 The database defaults to the local PostgreSQL from the repo-root `compose.yaml`
 (`docker compose up -d db`). Configuration is read from `../.env` (see `../.env.example`).

@@ -85,13 +85,12 @@ Plus language selection, favourite club and single-player focus modes, so the sa
 | Layer | Stack |
 |---|---|
 | Agent orchestration | Microsoft Agent Framework |
-| Models | Microsoft Foundry |
+| Models | Pluggable — an optional Microsoft Foundry adapter is included |
 | Backend | Python, FastAPI |
 | Metrics & simulation | Python |
 | Frontend | React, TypeScript |
-| Persistence | PostgreSQL |
-| Cloud | Azure Container Apps, Azure Functions |
-| Tooling | GitHub Copilot |
+| Persistence | PostgreSQL (optional) |
+| Deployment | Containerized (Docker) — runs on any host: a VPS, Render, Fly.io, Railway, Cloud Run, or a cloud |
 
 ---
 
@@ -110,7 +109,7 @@ Plus language selection, favourite club and single-player focus modes, so the sa
 - [ ] Orchestration, reconciliation and failure handling
 - [ ] Frontend: analyst mode and fan mode
 - [ ] Multi-language output
-- [ ] Azure deployment
+- [ ] Deployment (containerized, provider-agnostic)
 - [ ] Demo video
 
 ---

@@ -12,16 +12,16 @@ npm ci
 npm run dev
 ```
 
-Open http://127.0.0.1:5173. The default screen offers a real server session; it does not silently fall back to fixture data. For offline use, choose **Open local rehearsal** or open `/?source=local` (no backend or Azure credentials required).
+Open http://127.0.0.1:5173. The default screen offers a real server session; it does not silently fall back to fixture data. For offline use, choose **Open local rehearsal** or open `/?source=local` (no backend required).
 
 To connect to the deployed backend in PowerShell, run this in `frontend/`:
 
 ```powershell
-$env:VITE_API_BASE='https://tactix-backend.blackcliff-8260e62c.brazilsouth.azurecontainerapps.io'
+$env:VITE_API_BASE='https://your-backend.example.com'
 npm run dev -- --port 5174
 ```
 
-This flow was exercised against Azure, including creation, seek, SSE and metrics. Alternatively copy `.env.example` to `.env.local` and set the same public origin. Restart Vite after changing it. Without a value, the development `/api` proxy targets `http://127.0.0.1:8000`. `VITE_API_BASE` must omit `/api/v1`; it is embedded at build time, including production builds. It is public configuration, never a place for credentials.
+This flow was exercised against a deployed backend, including creation, seek, SSE and metrics. Alternatively copy `.env.example` to `.env.local` and set the same public origin. Restart Vite after changing it. Without a value, the development `/api` proxy targets `http://127.0.0.1:8000`. `VITE_API_BASE` must omit `/api/v1`; it is embedded at build time, including production builds. It is public configuration, never a place for credentials.
 
 ### Production container
 
@@ -68,7 +68,7 @@ The production output is in `dist/`. CI runs a clean install, lint, tests and th
 
 The context panel is explicitly labelled as a scripted preview. Neither a live SSE connection nor agent/model inference is active. Synthetic xG is an uncalibrated deterministic proxy, not a trained probability model.
 
-When connected to the backend, **Analyze match** calls `POST /api/v1/sessions/{session_id}/analyze` and renders the Narrator's source-finding provenance. This requires the backend's Microsoft Foundry project, deployment and Entra authentication to be configured. Without Foundry, the UI and tests can be validated with fixtures, but a live agent smoke test remains pending.
+When connected to the backend, **Analyze match** calls `POST /api/v1/sessions/{session_id}/analyze` and renders the Narrator's source-finding provenance. This requires the backend to have a model provider configured (the optional Foundry adapter, or another provider). Without one, the UI and tests can be validated with fixtures, but a live agent smoke test remains pending.
 
 ## Data and structure
 
@@ -107,4 +107,4 @@ Run the contract smoke against a running backend (Node 24):
 node scripts/smoke-analyst.mjs http://127.0.0.1:8000
 ```
 
-This creates and deletes its own synthetic session, checks cuts immediately before and at 62:00, reconciles metric IDs, directed pass counts, node observations and shot coordinates/xG with source events, and resolves historical pattern evidence from fixture frames. It was also run successfully against the deployed Azure backend. Component tests cover pinned cuts, keyboard inspection, missing/zero values, historical cancellation, revision resets, future-data exclusion and spatial versus topological layouts.
+This creates and deletes its own synthetic session, checks cuts immediately before and at 62:00, reconciles metric IDs, directed pass counts, node observations and shot coordinates/xG with source events, and resolves historical pattern evidence from fixture frames. It was also run successfully against a deployed backend. Component tests cover pinned cuts, keyboard inspection, missing/zero values, historical cancellation, revision resets, future-data exclusion and spatial versus topological layouts.

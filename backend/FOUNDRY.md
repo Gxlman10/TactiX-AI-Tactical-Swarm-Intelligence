@@ -1,5 +1,11 @@
 # Analyst and Historian on MAF + Foundry
 
+> **Optional.** Microsoft Foundry is **one** model-provider adapter for the live agents, not a
+> requirement. The whole project — the synthetic universe, the deterministic metrics, the
+> swarm contracts and the offline tests — builds and runs without it. Foundry (or any other
+> provider) is only needed to run the LLM agents live; without one, `/analyze` returns 503 and
+> everything else works. Another provider can be wired behind the same contracts.
+
 `specialists-maf-v1` implements the two-specialist fan-out using real Microsoft
 Agent Framework `Agent` and `FunctionTool` objects. The normal provider is
 `FoundryChatClient`, with local evidence tools and the existing versioned prompts.
