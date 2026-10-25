@@ -12,12 +12,8 @@ pytest.importorskip("agent_framework")
 from agent_framework import BaseChatClient, ChatResponse, Content, FunctionInvocationLayer, Message
 
 from tactix.agents.contracts import NarratorOutput, PersonalizerOutput
-from tactix.agents.foundry import (
-    ToolBudget,
-    foundry_client,
-    require_foundry_configuration,
-    run_specialists,
-)
+from tactix.agents.providers.foundry import FoundryProvider
+from tactix.agents.runtime import ToolBudget, run_specialists
 from tactix.agents.tools import EvidenceTools
 from tactix.config import Settings
 from tactix.demo.scenario import build_demo
@@ -104,7 +100,7 @@ class ScriptedModel(FunctionInvocationLayer, BaseChatClient):
 
 
 def options(**kwargs):
-    return Settings(_env_file=None, foundry_timeout_seconds=5, **kwargs)
+    return Settings(_env_file=None, model_timeout_seconds=5, **kwargs)
 
 
 async def test_real_maf_agents_execute_tools_concurrently_and_validate(scope):
@@ -144,7 +140,7 @@ async def test_one_failure_does_not_fabricate_or_drop_other_specialist(scope, mo
 
 
 async def test_timeout_cancels_stalled_role_but_preserves_completed_role(scope):
-    settings = Settings(_env_file=None, foundry_timeout_seconds=0.3)
+    settings = Settings(_env_file=None, model_timeout_seconds=0.3)
     result = await run_specialists(scope, settings, client=ScriptedModel(scope, {A: "hang"}))
     assert result.context.degraded == [A] and result.executions[0].failure == "timeout"
     assert result.context.historian_findings
@@ -152,7 +148,7 @@ async def test_timeout_cancels_stalled_role_but_preserves_completed_role(scope):
 
 async def test_parallel_function_batch_cannot_bypass_local_budget(scope):
     result = await run_specialists(
-        scope, options(foundry_max_tool_calls=1), client=ScriptedModel(scope, {A: "budget"})
+        scope, options(model_max_tool_calls=1), client=ScriptedModel(scope, {A: "budget"})
     )
     assert result.partial and result.executions[0].failure == "tool_budget"
     assert len(result.executions[0].tool_calls) <= 2
@@ -196,7 +192,7 @@ def test_actual_function_tool_schemas_and_roles(scope):
 )
 def test_configuration_rejects_missing_or_non_project_endpoint(endpoint):
     with pytest.raises(ValueError):
-        require_foundry_configuration(
+        FoundryProvider().validate_configuration(
             Settings(_env_file=None, foundry_endpoint=endpoint, foundry_model="deployment")
         )
 
@@ -207,7 +203,7 @@ def test_valid_configuration_does_not_claim_cloud_access():
         foundry_endpoint="https://example.test/api/projects/test",
         foundry_model="deployment",
     )
-    require_foundry_configuration(settings)
+    FoundryProvider().validate_configuration(settings)
 
 
 async def test_real_foundry_client_construction_and_transport_cleanup_without_inference():
@@ -218,7 +214,7 @@ async def test_real_foundry_client_construction_and_transport_cleanup_without_in
         foundry_endpoint="https://example.test/api/projects/test",
         foundry_model="deployment",
     )
-    async with foundry_client(settings) as client:
+    async with FoundryProvider().client(settings) as client:
         assert isinstance(client, FoundryChatClient)
         assert client.client.max_retries == 0
         assert not client.client.is_closed()

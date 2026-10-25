@@ -1,11 +1,15 @@
-"""Real MAF/Foundry adapter and bounded execution of the two evidence specialists."""
+"""Provider-neutral MAF runtime: bounded execution of the two evidence specialists.
+
+This module drives Microsoft Agent Framework ``Agent`` instances against whatever chat
+client a provider adapter supplies (see ``tactix.agents.providers``); it never constructs
+a provider itself at import time and knows nothing Foundry-specific. When no client is
+injected, it resolves the configured provider lazily and borrows its client.
+"""
 
 import asyncio
 import json
 import time
-from contextlib import asynccontextmanager
 from typing import Literal
-from urllib.parse import urlsplit
 
 from pydantic import BaseModel
 
@@ -47,73 +51,25 @@ class SpecialistRun(BaseModel):
     partial: bool
 
 
-def require_foundry_configuration(settings: Settings) -> None:
-    if (
-        not settings.foundry_endpoint
-        or not settings.foundry_model
-        or not settings.foundry_model.strip()
-    ):
-        raise ValueError("Configure TACTIX_FOUNDRY_ENDPOINT and TACTIX_FOUNDRY_MODEL")
-    endpoint = urlsplit(settings.foundry_endpoint)
-    if (
-        endpoint.scheme != "https"
-        or not endpoint.hostname
-        or endpoint.username
-        or endpoint.password
-        or endpoint.query
-        or endpoint.fragment
-        or "/api/projects/" not in endpoint.path
-        or not endpoint.path.split("/api/projects/", 1)[1].strip("/")
-    ):
-        raise ValueError("TACTIX_FOUNDRY_ENDPOINT must be an HTTPS Foundry project endpoint")
-
-
 def invocation_limits(settings: Settings) -> dict:
+    """MAF function-invocation bounds. Neutral across providers: any MAF chat client accepts
+    them through ``function_invocation_configuration``."""
     return {
-        "max_iterations": settings.foundry_max_iterations,
-        "max_function_calls": settings.foundry_max_tool_calls,
-        "max_duration_seconds": settings.foundry_timeout_seconds,
+        "max_iterations": settings.model_max_iterations,
+        "max_function_calls": settings.model_max_tool_calls,
+        "max_duration_seconds": settings.model_timeout_seconds,
         "allow_concurrent_invocation": False,
         "terminate_on_unknown_calls": True,
         "include_detailed_errors": False,
     }
 
 
-@asynccontextmanager
-async def foundry_client(settings: Settings):
-    """Own and close credentials, project pipeline and inference transport on one loop."""
-    require_foundry_configuration(settings)
-    from agent_framework.foundry import FoundryChatClient
-    from azure.ai.projects.aio import AIProjectClient
-    from azure.identity.aio import (
-        AzureCliCredential,
-        DefaultAzureCredential,
-        ManagedIdentityCredential,
-    )
-
-    credential = {
-        "cli": AzureCliCredential,
-        "default": DefaultAzureCredential,
-        "managed_identity": ManagedIdentityCredential,
-    }[settings.foundry_authentication]()
-    async with (
-        credential,
-        AIProjectClient(
-            endpoint=settings.foundry_endpoint, credential=credential, retry_total=0
-        ) as project,
-    ):
-        client = FoundryChatClient(
-            project_client=project,
-            model=settings.foundry_model,
-            function_invocation_configuration=invocation_limits(settings),
-        )
-        # Disable hidden transport retries: the application owns the bounded attempt budget.
-        client.client.max_retries = 0
-        client.client.timeout = settings.foundry_timeout_seconds
-        try:
-            yield client
-        finally:
-            await client.client.close()
+def apply_invocation_limits(client, settings: Settings) -> None:
+    """Apply the invocation bounds to a MAF chat client, if it exposes the hook. Guarded so a
+    client that does not implement MAF's function-invocation layer does not break the run."""
+    config = getattr(client, "function_invocation_configuration", None)
+    if config is not None:
+        config.update(invocation_limits(settings))
 
 
 class ToolBudget:
@@ -161,12 +117,12 @@ async def _specialist(role, client, scope, settings):
         match_id=scope.match_id, minute=scope.at_second // 60, metrics=scope.metrics()
     )
     request = build_request(role, state, scope)
-    budget = ToolBudget(settings.foundry_max_tool_calls)
+    budget = ToolBudget(settings.model_max_tool_calls)
     began, attempts, failure = time.monotonic(), 0, None
     findings = []
     try:
-        async with asyncio.timeout(settings.foundry_timeout_seconds):
-            for attempts in range(1, settings.foundry_max_attempts + 1):
+        async with asyncio.timeout(settings.model_timeout_seconds):
+            for attempts in range(1, settings.model_max_attempts + 1):
                 agent = Agent(
                     client=client,
                     name=role.value,
@@ -184,7 +140,7 @@ async def _specialist(role, client, scope, settings):
                         message,
                         options={
                             "response_format": FindingsOutput,
-                            "max_tokens": settings.foundry_max_tokens,
+                            "max_tokens": settings.model_max_tokens,
                             "store": False,
                         },
                     )
@@ -223,13 +179,16 @@ async def run_specialists(
 ) -> SpecialistRun:
     """Parallel fan-out with fresh Agent instances and a deterministic merge order.
 
-    Injected clients are for offline SDK tests. The normal path constructs the real
-    Foundry provider; it never substitutes a fabricated response on provider failure.
+    Injected clients are for offline SDK tests. The normal path resolves the configured
+    provider and borrows its MAF chat client; it never substitutes a fabricated response on
+    provider failure.
     """
     if client is None:
-        async with foundry_client(settings) as provider:
-            return await run_specialists(scope, settings, client=provider)
-    client.function_invocation_configuration.update(invocation_limits(settings))
+        from tactix.agents.providers import get_provider
+
+        async with get_provider(settings).client(settings) as resolved:
+            return await run_specialists(scope, settings, client=resolved)
+    apply_invocation_limits(client, settings)
     pairs = await asyncio.gather(
         *(_specialist(role, client, scope, settings) for role in SPECIALISTS)
     )

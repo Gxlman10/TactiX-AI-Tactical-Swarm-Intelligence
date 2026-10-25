@@ -1,4 +1,4 @@
-"""Run the two real MAF/Foundry specialists on a fixed authored-demo cut."""
+"""Run the two real MAF specialists on a fixed authored-demo cut, via the configured provider."""
 
 import argparse
 import asyncio
@@ -6,7 +6,8 @@ import importlib.metadata
 import json
 from pathlib import Path
 
-from tactix.agents.foundry import require_foundry_configuration, run_specialists
+from tactix.agents.providers import get_provider
+from tactix.agents.runtime import run_specialists
 from tactix.agents.tools import EvidenceTools
 from tactix.config import Settings
 from tactix.demo.scenario import build_demo
@@ -40,6 +41,7 @@ def main() -> None:
             print(
                 json.dumps(
                     {
+                        "provider": settings.model_provider,
                         "endpoint_configured": bool(settings.foundry_endpoint),
                         "deployment_configured": bool(settings.foundry_model),
                         "authentication": settings.foundry_authentication,
@@ -51,7 +53,7 @@ def main() -> None:
             return
         if args.output is None:
             parser.error("Provide --output for live execution")
-        require_foundry_configuration(settings)
+        get_provider(settings).validate_configuration(settings)
         if args.output.exists():
             raise ValueError("Output file already exists")
         if not 0 <= args.at_second <= 5400:

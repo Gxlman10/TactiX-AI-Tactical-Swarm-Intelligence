@@ -50,9 +50,9 @@ Choosing/provisioning the project and its model remains an external setup step.
 For local Entra authentication, run `az login` in the intended tenant/subscription.
 The logged-in identity needs inference permission on the project/deployment.
 Other explicit modes are `default` (DefaultAzureCredential) and `managed_identity`
-(ManagedIdentityCredential). A key in the legacy `TACTIX_FOUNDRY_API_KEY` field is
-**not used** by this project-based adapter. An API-key-only resource would require
-a separately verified adapter; do not treat that field as a working fallback.
+(ManagedIdentityCredential). This project-based adapter uses Entra authentication only; it
+has **no** API-key field. An API-key-only resource would require a separately verified
+adapter registered under its own provider name.
 
 `--check-config` prints only presence flags, package versions, auth mode and
 `live_verified:false`. It never retrieves credentials, authenticates, contacts
@@ -112,11 +112,14 @@ Defaults, configurable through the `TACTIX_` environment prefix:
 
 | Variable suffix | Default | Bound |
 |---|---|---|
-| FOUNDRY_TIMEOUT_SECONDS | 30 | >0, <=120; total role budget, including validation retries |
-| FOUNDRY_MAX_ATTEMPTS | 2 | 1–2; retry malformed/invalid output only |
-| FOUNDRY_MAX_TOOL_CALLS | 8 | 1–20; evidence-access budget across attempts |
-| FOUNDRY_MAX_ITERATIONS | 5 | 1–10 model roundtrips per attempt |
-| FOUNDRY_MAX_TOKENS | 2048 | 256–8192 output tokens per response |
+| MODEL_TIMEOUT_SECONDS | 30 | >0, <=120; total role budget, including validation retries |
+| MODEL_MAX_ATTEMPTS | 2 | 1–2; retry malformed/invalid output only |
+| MODEL_MAX_TOOL_CALLS | 8 | 1–20; evidence-access budget across attempts |
+| MODEL_MAX_ITERATIONS | 5 | 1–10 model roundtrips per attempt |
+| MODEL_MAX_TOKENS | 2048 | 256–8192 output tokens per response |
+
+These bounds are provider-neutral (prefix `TACTIX_MODEL_`); they apply to whichever adapter
+`TACTIX_MODEL_PROVIDER` selects, not only Foundry.
 
 SDK function-loop limits are combined with a local tool budget checked **before**
 evidence access. A parallel batch cannot execute unlimited extra accesses. Traces
