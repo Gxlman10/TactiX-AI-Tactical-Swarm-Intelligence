@@ -4,10 +4,10 @@ Portable fallback for the match demonstration. This is a recording of the author
 
 | Artifact | Purpose |
 |---|---|
-| `recording.json.gz` | Canonical JSON payload, gzip compressed (633,620 bytes in the committed build) |
+| `recording.json.gz` | Canonical JSON payload, gzip compressed |
 | `manifest.json` | Format/scenario versions, canonical SHA-256, size, match identity, event count, fixture IDs and checkpoint cuts |
 
-The canonical uncompressed payload has 4,623,515 bytes and SHA-256 `6f85661040e08f7606918ce4c0ea7f3033714fe2dce36d00c06e740be97ba1c9`. The checksum covers canonical UTF-8 JSON, not gzip headers or implementation-dependent compression. It detects drift relative to the manifest; it is not a digital signature. The Git revision supplies the reference manifest.
+Read the canonical byte size and SHA-256 from the committed `manifest.json`; these are the source of truth. The checksum covers canonical UTF-8 JSON, not gzip headers or implementation-dependent compression. It detects drift relative to the manifest; it is not a digital signature. The Git revision supplies the reference manifest.
 
 ## Verify and replay
 
@@ -19,7 +19,7 @@ uv run python -m tactix.demo.recording verify ../data/recordings/ashford-demo-v1
 uv run python -m tactix.demo.recording replay ../data/recordings/ashford-demo-v1 --start 3660 --end 3780
 ```
 
-Normal verification loads the committed bytes without invoking the generator. It validates all five matches, reconciles historical scorer/score ledgers, recomputes every metric and context checkpoint, checks evidence availability and asserts the authored climax. `--regenerate` additionally compares the recorded bundle with today's generator, detecting scenario drift. Both run without PostgreSQL, Azure, Foundry or network access once dependencies are installed.
+Normal verification loads the committed bytes without invoking the generator. It validates all five matches, reconciles historical scorer/score ledgers, recomputes every metric and context checkpoint, checks evidence availability and asserts the authored climax. `--regenerate` additionally compares the recorded bundle with today's generator, detecting scenario drift. Regeneration compares event angles with an absolute tolerance of 1e-14 radians for Python/libm portability; all other fields remain exact. This does not relax the SHA-256 check of the saved payload or rewrite the recording. Both run without PostgreSQL, Azure, Foundry or network access once dependencies are installed.
 
 `replay` emits 121 `ReplayUpdate` NDJSON records for inclusive integer cuts 61:00 through 63:00. It drives the existing `MatchReplay` with a virtual clock, so output is repeatable without sleeping. Sequence numbers retain their full-match identity; events earlier than the start are pre-roll from the checkpoint, not re-delivered by the stream. The complete artifact contains future events by design: consumers must use the cutoff checkpoints or replay output when displaying a partial match.
 
@@ -56,4 +56,4 @@ uv run python -m tactix.demo.recording verify ../data/generated/recording-rebuil
 uv run pytest tests/unit/test_recording.py -q
 ```
 
-Recording requires a new output directory. Canonical serialization sorts keys, excludes wall-clock/environment/session metadata and uses a fixed gzip time/OS header. Tests check byte-identical consecutive builds on the same runtime, canonical equality with this committed artifact, corrupted/truncated payloads, changed manifests, rehashed forged checkpoints, exact replay ordering, repeated playback, future-event exclusion, invalid ranges and extraction overwrite protection. CI validates this committed fallback on every backend run. A deliberate change to the published scenario requires a new scenario version and recording, not silently replacing these reference bytes.
+Recording requires a new output directory. Canonical serialization sorts keys, excludes wall-clock/environment/session metadata and uses a fixed gzip time/OS header. Tests check byte-identical consecutive builds on the same runtime, semantic equality with this committed artifact (only derived event angles allow the documented libm tolerance), corrupted/truncated payloads, changed manifests, rehashed forged checkpoints, exact replay ordering, repeated playback, future-event exclusion, invalid ranges and extraction overwrite protection. CI validates this committed fallback on every backend run. A deliberate change to the published scenario requires a new scenario version and recording, not silently replacing these reference bytes.

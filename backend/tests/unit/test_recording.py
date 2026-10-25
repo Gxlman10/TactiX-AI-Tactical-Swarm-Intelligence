@@ -2,6 +2,7 @@
 
 import gzip
 import json
+import math
 import subprocess
 import sys
 from pathlib import Path
@@ -11,7 +12,15 @@ import pytest
 
 from tactix.demo import recording as module
 from tactix.demo.evidence import seconds
-from tactix.demo.recording import PAYLOAD, canonical, load, manifest, record, replay_updates
+from tactix.demo.recording import (
+    PAYLOAD,
+    canonical,
+    equivalent_bundles,
+    load,
+    manifest,
+    record,
+    replay_updates,
+)
 
 SOURCE = Path(__file__).resolve().parents[3] / "data/recordings/ashford-demo-v1"
 
@@ -43,12 +52,9 @@ def test_regeneration_is_byte_identical_and_cannot_overwrite(tmp_path):
     assert record(first) == record(second)
     for name in (PAYLOAD, "manifest.json"):
         assert (first / name).read_bytes() == (second / name).read_bytes()
-    assert gzip.decompress((first / PAYLOAD).read_bytes()) == gzip.decompress(
-        (SOURCE / PAYLOAD).read_bytes()
-    )
-    assert json.loads((first / "manifest.json").read_bytes()) == json.loads(
-        (SOURCE / "manifest.json").read_bytes()
-    )
+    rebuilt, reference = load(first), load(SOURCE)
+    assert equivalent_bundles(rebuilt.bundle, reference.bundle)
+    assert rebuilt.checkpoints == reference.checkpoints
     with pytest.raises(FileExistsError):
         record(first)
 
@@ -135,3 +141,21 @@ def test_cli_extraction_replay_and_overwrite_protection(tmp_path):
     assert replay.returncode == 0, replay.stderr
     cuts = [json.loads(line) for line in replay.stdout.splitlines()]
     assert [c["score"] for c in cuts] == [[1, 0], [1, 1]]
+
+
+def test_regeneration_tolerates_only_insignificant_libm_angle_roundoff(recorded):
+    original = recorded.bundle
+    changed = original.model_copy(deep=True)
+    event = next(e for e in changed.live.events if e.angle is not None)
+    initial = event.angle
+    event.angle = math.nextafter(initial, math.inf)
+    assert event.angle != initial
+    assert equivalent_bundles(original, changed)
+    event.angle = initial + 1e-9
+    assert not equivalent_bundles(original, changed)
+    event.angle = initial
+    event.start.x += 1e-12
+    assert not equivalent_bundles(original, changed)
+    changed = original.model_copy(deep=True)
+    changed.live.events[0].id = "different-event"
+    assert not equivalent_bundles(original, changed)

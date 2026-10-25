@@ -101,6 +101,10 @@ Plus language selection, favourite club and single-player focus modes, so the sa
 
 ---
 
+## Verification
+
+See [the verified demo procedure](VERIFICATION.md) for clean setup, browser checks, PostgreSQL migrations, expected results and the current limits of live model verification.
+
 ## Roadmap
 
 - [ ] Synthetic universe generator — league, squads, season history
