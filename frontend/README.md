@@ -43,7 +43,7 @@ Create an authored Ashford session (starts paused at 61:00) or paste a session U
 
 The client rebuilds visible history in pages of up to 500 events and deduplicates overlap by sequence within the session/revision. A seek clears old events, metrics and context immediately. Delayed responses from older revisions are discarded. Metrics are fetched once per second without overlapping requests, plus explicit reconstruction after seek/reconnect, and mapped by team ID. Missing values show a dash. Clock and score always come from the backend; the local timer never runs in server mode.
 
-On stream failure the client closes EventSource, waits at least five seconds, fetches the latest state, reconstructs history and opens a fresh stream without a stale resume token. HTTP retry hints can lengthen the delay. The last confirmed view is marked as reconnecting and controls are disabled. A deleted session shows a terminal closed state. Finished matches close their stream; Play seeks to zero and starts again.
+On stream failure the client retains the last confirmed view and selected action, disables clock controls and shows a retry countdown. Delays grow from 5 to 10, 20 and at most 30 seconds; server Retry-After or SSE retry hints can lengthen that delay. Reconnect is available immediately, with only one recovery in flight. Recovery reads the bounded session state, reconstructs paginated history and resumes from a validated session/revision cursor using the Last-Event-ID header. A changed revision or HTTP 409 discards that cursor and reconstructs without it. HTTP 404 is terminal and offers a new demo or the local rehearsal. Finished matches close their stream; Play seeks to zero and starts again.
 
 Switching to the local rehearsal or unmounting cancels the subscription and pending reads. Sessions created by the view are deleted; joined sessions are left intact. Page exit also attempts a keepalive deletion. Abrupt browser/network failure can prevent cleanup: the current backend has no automatic session expiry and stores sessions in one worker's memory. Restarting the backend invalidates session IDs.
 
@@ -108,3 +108,49 @@ node scripts/smoke-analyst.mjs http://127.0.0.1:8000
 ```
 
 This creates and deletes its own synthetic session, checks cuts immediately before and at 62:00, reconciles metric IDs, directed pass counts, node observations and shot coordinates/xG with source events, and resolves historical pattern evidence from fixture frames. It was also run successfully against a deployed backend. Component tests cover pinned cuts, keyboard inspection, missing/zero values, historical cancellation, revision resets, future-data exclusion and spatial versus topological layouts.
+
+## Connection recovery
+
+`src/features/live/stream.ts` uses streaming fetch so retries can send Last-Event-ID explicitly and inspect HTTP status/Retry-After, which native EventSource does not expose. It accepts UTF-8 fragmented LF/CRLF SSE frames, multiline data and heartbeat comments; incomplete frames are never dispatched. It rejects unexpected content types and oversized frames. LiveSession owns retries, deduplicates sequence numbers, reconciles revisions and aborts the reader on leave. Custom API origins must allow the Last-Event-ID CORS request header (the backend CORS middleware allows request headers).
+
+Reconnecting keeps the server-owned clock untouched: another viewer may continue playback. The UI labels its retained view as stale until reconstruction succeeds. Metrics polling stops with the disconnected stream. Recovery attempts are bounded by the HTTP read timeout and serialized. A seek invalidates the narrative report and late analysis replies cannot populate another revision. No automatic retry of POST analysis or playback controls is performed.
+
+Tests cover transport framing, cursor headers, 404/409/503, Retry-After/SSE retry, EOF, disposal, revision changes, retained data, increasing retry delays, terminal sessions, delayed analysis and EN/ES recovery controls. This does not provide durable sessions: a backend restart still requires a new demo session.
+
+## Editorial homepage
+
+The connection screen now sits inside a concise bilingual introduction: purpose, specialist roles, the evidence-backed Ashford moment and the match studio entry. The existing server/local workflows are unchanged; the TactiX brand link returns to the homepage. The studio shares the midnight blue palette while retaining semantic evidence colors.
+
+The supplied competition logo is displayed as hackathon context, not as a fictional club badge. `public/images/tactix-athletes.webp` is an original generated editorial asset featuring fictional, unbranded athletes; the portraits do not identify roster players. It is compressed to WebP for delivery. No real-player imagery from the visual reference is used. Homepage moment counts come from the exported backend fixture. Agent descriptions explain the architecture and explicitly state that live narration needs a configured model.
+
+Navigation has a mobile menu, visible keyboard focus, section anchors and a skip link. Motion respects reduced-motion preferences. The primary action leads to the real connection panel, with loading/errors and local rehearsal still available.
+
+## Browser demo regression suite
+
+Run from `frontend/` after installing the project dependencies and Chromium:
+
+```sh
+node node_modules/@playwright/test/cli.js install chromium
+npm run test:e2e
+```
+
+The command type-checks the browser tests, builds the production frontend with its API URL fixed to `http://127.0.0.1:8018`, and starts dedicated local Uvicorn and Vite preview processes on ports 8018 and 4178. Node and uv must be available. Ports must be free: the suite refuses to borrow an existing server. No Azure, PostgreSQL or Foundry credentials are needed, and no analysis request is fabricated. The app's in-memory synthetic session API is real.
+
+Four scenarios run in desktop Chromium (1280 × 800) and mobile Chromium (390 × 844):
+
+- Home → create demo → play/pause → inclusive 62:00 goal → keyboard rewind to 61:59 → inspect metric and historical evidence → Fan/Analyst → Spanish. Assertions cover server score, hidden future context and retained cutoff.
+- Browser offline/online recovery with the last confirmed cut, disabled controls and unchanged visible action list.
+- Delete the owned session through the API, verify terminal UI and create another demo.
+- Loaded image assets, no horizontal overflow, mobile menu, specialist selection, local rehearsal and return home.
+
+Each test gets a fresh browser context, checks unhandled page exceptions and deletes only the sessions it creates. Playwright stops the owned web servers when the run ends. There are no fixed sleeps or screenshot pixel baselines; assertions wait for the actual UI or API condition. Retries are disabled so a flaky first attempt cannot silently pass.
+
+Failures retain screenshots, video, event traces and an HTML report in ignored `test-results/` and `playwright-report/` directories. Successful climax screenshots are attached to the report. Inspect results with:
+
+```sh
+node node_modules/@playwright/test/cli.js show-report
+```
+
+To run one viewport: `npm run test:e2e -- --project=mobile`. CI runs the suite in its own `demo-e2e` job against a clean dependency install and uploads diagnostics for seven days. This validates the deterministic demo journey; real model inference remains a separate Foundry smoke test. Configuration follows the [Playwright test configuration](https://playwright.dev/docs/test-configuration) API.
+
+The offline test exposed a paused stream that could remain open after networking failed. A failed/timed-out metric fetch now enters reconnection while retaining the confirmed view, rather than continuing to label the session connected; a unit regression covers this case too.

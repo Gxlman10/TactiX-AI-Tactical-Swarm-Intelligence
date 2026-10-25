@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { fixture, timeOf } from "../match/model";
 import {
   MatchApi,
+  ApiError,
   readReplay,
   type ReplayUpdate,
   type MetricsResponse,
@@ -10,12 +11,14 @@ import { LiveSession, metricRows } from "./session";
 
 class Source extends EventTarget {
   closed = false;
-  onerror: (() => void) | null = null;
+  onerror: ((error?: unknown) => void) | null = null;
   close() {
     this.closed = true;
   }
-  send(type: string, data: unknown) {
-    this.dispatchEvent(new MessageEvent(type, { data: JSON.stringify(data) }));
+  send(type: string, data: unknown, lastEventId = "") {
+    this.dispatchEvent(
+      new MessageEvent(type, { data: JSON.stringify(data), lastEventId }),
+    );
   }
 }
 const json = (data: unknown, status = 200) =>
@@ -26,9 +29,11 @@ const json = (data: unknown, status = 200) =>
 const id = "00000000-0000-0000-0000-000000000001";
 let current: ReplayUpdate;
 let sources: Source[];
+let tokens: (string | undefined)[];
 let calls: string[];
 let client: LiveSession;
 let failControl: boolean;
+let holdReport: (() => Promise<Response>) | null;
 let holdMetrics: (() => Promise<Response>) | null;
 let lastMetrics: MetricsResponse;
 const info = () => ({
@@ -41,6 +46,7 @@ const info = () => ({
 const fetcher: typeof fetch = async (input, options = {}) => {
   const url = new URL(String(input));
   calls.push(`${options.method ?? "GET"} ${url.pathname}${url.search}`);
+  if (url.pathname.endsWith("/analyze") && holdReport) return holdReport();
   if (options.method === "DELETE") return new Response(null, { status: 204 });
   if (url.pathname.endsWith("/controls")) {
     if (failControl) return json({ detail: "Control rejected" }, 503);
@@ -115,9 +121,11 @@ const fetcher: typeof fetch = async (input, options = {}) => {
 beforeEach(() => {
   vi.useFakeTimers();
   sources = [];
+  tokens = [];
   calls = [];
   failControl = false;
   holdMetrics = null;
+  holdReport = null;
   current = {
     match_id: fixture.match_id,
     revision: 0,
@@ -130,10 +138,11 @@ beforeEach(() => {
   };
   client = new LiveSession(
     new MatchApi("https://backend.test", fetcher),
-    () => {
+    (_url, token) => {
+      tokens.push(token);
       const source = new Source();
       sources.push(source);
-      return source as unknown as EventSource;
+      return source;
     },
   );
 });
@@ -287,7 +296,7 @@ describe("server session integration", () => {
     client.dispose();
     client = new LiveSession(
       new MatchApi("https://backend.test", historyFetch),
-      () => new Source() as unknown as EventSource,
+      () => new Source(),
     );
     await client.start(id);
     const artifact = await client.history(
@@ -308,7 +317,7 @@ describe("server session integration", () => {
     client.dispose();
     client = new LiveSession(
       new MatchApi("https://backend.test", slow),
-      () => new Source() as unknown as EventSource,
+      () => new Source(),
     );
     await client.start(id);
     const fixtureId = Object.keys(fixture.context.historical_patterns)[0];
@@ -356,4 +365,82 @@ describe("server session integration", () => {
       client.getSnapshot().events.every((item) => timeOf(item.event) <= 3719),
     ).toBe(true);
   });
+});
+
+it("resumes the stream token after reconciliation, then discards rejected cursors", async () => {
+  await client.start();
+  const token = `${id}:${current.revision}:1`;
+  sources[0].send("replay", current, token);
+  sources[0].onerror!();
+  const events = client.getSnapshot().events;
+  expect(client.getSnapshot().retryAttempt).toBe(1);
+  expect(client.getSnapshot().retryAt).toBe(Date.now() + 5000);
+  expect(client.getSnapshot().events).toEqual(events);
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(tokens.at(-1)).toBe(token);
+  sources.at(-1)!.onerror!(new ApiError(409, "Cursor expired"));
+  await vi.advanceTimersByTimeAsync(10000);
+  expect(tokens.at(-1)).toBeUndefined();
+});
+
+it("uses bounded backoff, respects Retry-After and stops on missing sessions", async () => {
+  await client.start();
+  sources[0].onerror!(new ApiError(503, "Busy", 12));
+  expect(client.getSnapshot().retryAt).toBe(Date.now() + 12000);
+  await vi.advanceTimersByTimeAsync(12000);
+  sources.at(-1)!.onerror!();
+  expect(client.getSnapshot().retryAt).toBe(Date.now() + 10000);
+  await vi.advanceTimersByTimeAsync(10000);
+  sources.at(-1)!.onerror!(new ApiError(404, "Gone"));
+  expect(client.getSnapshot().connection).toBe("closed");
+  expect(client.getSnapshot().retryAt).toBeNull();
+  const count = sources.length;
+  await vi.advanceTimersByTimeAsync(60000);
+  expect(sources).toHaveLength(count);
+});
+
+it("does not reuse an old stream token after another viewer seeks", async () => {
+  await client.start();
+  sources[0].send("replay", current, `${id}:${current.revision}:1`);
+  sources[0].onerror!();
+  current = {
+    ...current,
+    revision: current.revision + 1,
+    position_seconds: 3600,
+  };
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(tokens.at(-1)).toBeUndefined();
+  expect(
+    client.getSnapshot().events.every((e) => timeOf(e.event) <= 3600),
+  ).toBe(true);
+});
+
+it("discards analysis that completes after a seek", async () => {
+  await client.start();
+  let finish!: (response: Response) => void;
+  holdReport = () =>
+    new Promise((resolve) => {
+      finish = resolve;
+    });
+  const pending = client.analyze();
+  await client.control({ action: "seek", second: 3600 });
+  finish(json({ report_id: "old-cut-report" }));
+  await pending;
+  expect(client.getSnapshot().report).toBeNull();
+  expect(client.getSnapshot().analyzing).toBe(false);
+});
+
+it("marks a silent paused stream disconnected when metric reads lose the network", async () => {
+  await client.start();
+  holdMetrics = async () => {
+    throw new TypeError("Failed to fetch");
+  };
+  const confirmed = client.getSnapshot().events;
+  await vi.advanceTimersByTimeAsync(1000);
+  expect(client.getSnapshot().connection).toBe("reconnecting");
+  expect(client.getSnapshot().events).toEqual(confirmed);
+  expect(sources[0].closed).toBe(true);
+  holdMetrics = null;
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(client.getSnapshot().connection).toBe("connected");
 });

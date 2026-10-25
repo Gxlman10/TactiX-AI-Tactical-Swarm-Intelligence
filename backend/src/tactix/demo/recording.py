@@ -4,6 +4,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import math
 from pathlib import Path
 from typing import Literal
 
@@ -63,6 +64,25 @@ def canonical(value: BaseModel) -> bytes:
         ensure_ascii=False,
         allow_nan=False,
     ).encode("utf-8")
+
+
+def equivalent_bundles(left: DemoBundle, right: DemoBundle) -> bool:
+    """Compare regeneration, allowing only libm roundoff in derived event angles.
+
+    The persisted payload hash remains byte-exact. Coordinates, event identities,
+    outcomes and all other values must agree exactly; no artifact is rewritten.
+    """
+
+    def same(a, b, field=""):
+        if isinstance(a, dict) and isinstance(b, dict):
+            return a.keys() == b.keys() and all(same(a[k], b[k], k) for k in a)
+        if isinstance(a, list) and isinstance(b, list):
+            return len(a) == len(b) and all(same(x, y) for x, y in zip(a, b, strict=True))
+        if field == "angle" and type(a) is float and type(b) is float:
+            return math.isclose(a, b, rel_tol=0, abs_tol=1e-14)
+        return a == b
+
+    return same(left.model_dump(mode="json"), right.model_dump(mode="json"))
 
 
 def checkpoints(bundle: DemoBundle) -> list[Checkpoint]:
@@ -173,7 +193,7 @@ def load(directory: Path, *, regenerate: bool = False) -> Recording:
     if manifest(recording) != info:
         raise ValueError("Manifest disagrees with the recorded payload")
     validate(recording)
-    if regenerate and recording.bundle != build_demo():
+    if regenerate and not equivalent_bundles(recording.bundle, build_demo()):
         raise ValueError("Recording differs from the current scenario generator")
     return recording
 

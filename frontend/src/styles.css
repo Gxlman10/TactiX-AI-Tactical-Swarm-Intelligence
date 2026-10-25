@@ -2093,3 +2093,11 @@ input:disabled {
 .network-layout { display: flex; flex-wrap: wrap; gap: 4px; padding: 12px 16px 0; }
 .network-layout button { padding: 8px 12px; border: 1px solid var(--border); background: #272727; color: #deded8; font: inherit; font-size: 12px; cursor: pointer; }
 .network-layout button[aria-pressed="true"] { color: #c4f568; border-color: #c4f568; }
+
+.mobile-home { display: none; }
+@media (max-width: 600px) {
+  .mobile-home { display: inline-flex; align-items: center; color: #aab9ff; }
+  .topbar { height: auto; min-height: 64px; flex-wrap: wrap; gap: 12px; padding: 16px; }
+  .top-actions { flex-wrap: wrap; justify-content: flex-start; min-width: 0; }
+  .top-actions select { max-width: 200px; }
+}
