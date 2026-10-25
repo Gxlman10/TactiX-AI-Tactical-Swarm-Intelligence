@@ -1,33 +1,37 @@
 # TactiX — Decisiones de diseño y plan de ejecución
 
-> **Documento interno del equipo (español).** Es el acta de la reunión de refinamiento del
-> 20 de octubre de 2026 y la especificación técnica maestra. Todo lo que se entrega al jurado
-> (README, pitch, video, instrucciones) va en inglés; esto no.
+> **Documento interno del equipo (español).** Nació como acta de la reunión de refinamiento del
+> 20 de octubre de 2026; hoy es la **especificación técnica viva del producto**. El marco de
+> producto (qué construimos y por qué) está en `PRODUCTO.md`; las instrucciones operativas en
+> `CLAUDE.md`. Lo que mira el usuario del producto va en inglés; esto no.
 >
 > Si algo de aquí contradice lo que construimos, gana este documento o lo actualizamos. No es
-> sagrado: es la referencia viva.
+> sagrado: es la referencia viva. Las secciones §2–§6 (arquitectura y contratos) son el núcleo
+> durable; §7–§9 son el plan de producto y cambian con cada ronda.
 
 ---
 
-## 0. Estado y restricción dura
+## 0. Estado
 
-- **Hoy:** 20 de octubre de 2026. **Entrega:** 28 de octubre, 1:59 a. m. (Perú) → **~8 días**.
-- **Punto de partida:** 0 líneas de código. Solo documentación.
+- **Etapa:** producto. El proyecto ya no participa en el hackathon (la etapa hackathon vive en
+  `docs/archive/`).
+- **Qué existe:** las cuatro capas construidas y testeadas offline (universo, métricas, enjambre,
+  frontend). Los agentes en vivo están implementados pero aún **no corren** por falta de un
+  proveedor de modelo configurado con cuota.
 - **Regla de oro (de `CLAUDE.md`):** ante la duda, flujo de punta a punta antes que más módulos.
-- **La demo debe quedar arriba hasta el 10 de noviembre.** No apagar nada antes.
 
 ---
 
-## 1. Decisiones fijadas (reunión del 20/10)
+## 1. Decisiones fijadas
 
 ### Ronda 1 — postura general
 
 | Tema | Decisión | Nota |
 |---|---|---|
-| Equipo | Generalistas recién egresados, flexibles, fuerte apoyo en IA/herramientas | Trabajo organizado en capas paralelizables |
-| Alcance | **Backend profundo al 100% primero, luego UX** | Mitigación obligatoria: UI mínima en paralelo desde el día 2 (ver §7) |
-| Stream de eventos | Simulación real **+** run grabado para la demo | Motor determinista; la demo reproduce un partido grabado |
-| Infra | **100% serverless en Azure** | Detalles sobre la marcha; Vercel/Supabase solo como andamiaje local, nunca deploy final |
+| Equipo | Generalistas, flexibles, fuerte apoyo en IA/herramientas | Trabajo organizado en capas paralelizables |
+| Alcance | **Backend profundo primero, UX en paralelo** | El frontend pesa igual que el backend; no es relleno |
+| Stream de eventos | Simulación determinista **+** run grabado reproducible | Motor determinista; el demo reproduce un partido grabado |
+| Infra | **Agnóstica de cloud**: imagen de contenedor en cualquier host | Recomendado: Vercel (front) + Render/Railway (back + Postgres); VPS con `compose.yaml` como alternativa. Nada asume Azure |
 
 ### Ronda 2 — capa fundacional
 
@@ -35,7 +39,8 @@
 |---|---|
 | Universo sintético | **8–10 clubes**, cada uno con **~10–14 partidos ya jugados** (media temporada previa) |
 | Granularidad de eventos | **Coordenadas (x,y) + posesiones/fases enlazadas** |
-| Modelos / framework | **Microsoft Agent Framework + Microsoft Foundry** |
+| Framework de agentes | **Microsoft Agent Framework** (contrato de cliente neutral de proveedor) |
+| Proveedor de modelo | **Intercambiable.** Foundry es un adaptador; otros (OpenAI/Anthropic/local) entran detrás del mismo contrato. Ninguno asumido por el código |
 | Idiomas de salida | **Inglés + español, ambos reales**, conmutables en vivo |
 
 ### Ronda 3 — enjambre de agentes
@@ -60,18 +65,18 @@ está mejor especificada que mis defaults. Se adopta tal cual.
 | Validación | Pydantic | Contratos de eventos, métricas y respuestas de agentes |
 | Simulación | Python con semillas reproducibles | Liga, historial y partidos ficticios |
 | Métricas | Python determinista | Estadísticas + evidencia conservada |
-| Orquestación | Microsoft Agent Framework | Estado compartido, handoffs, coordinación |
-| Modelos | Microsoft Foundry | Interpretación táctica, narración, personalización |
+| Orquestación | Microsoft Agent Framework | Estado compartido, handoffs, coordinación (contrato de cliente neutral) |
+| Modelos | Adaptador de proveedor intercambiable | Interpretación táctica, narración, personalización. Foundry es el adaptador de hoy |
 | Frontend | React + TypeScript + Vite | Modos analista y aficionado |
 | Comunicación | REST + SSE | Control del partido + actualizaciones en vivo |
 | Base de datos | PostgreSQL | Universo, eventos, métricas, ejecuciones |
 | Acceso a datos | SQLAlchemy + Alembic | Consultas y migraciones |
-| Despliegue | Docker + Azure Container Apps | Publicar la app (serverless, scale-to-zero) |
-| Persistencia nube | Azure Database for PostgreSQL | Datos de la demo |
+| Empaquetado | Docker | Imagen de contenedor portable |
+| Despliegue | Cualquier host de contenedores | Vercel (front) + Render/Railway (back + Postgres), o VPS. Agnóstico de cloud |
 
 **Tooling:** uv (deps Python) · npm (frontend) · Ruff + ESLint + TypeScript (formato/estático) ·
 pytest (simulación, métricas, evidencia, recuperación) · Playwright (recorrido de la demo) ·
-Docker Compose (local reproducible) · GitHub Actions (CI + deploy) · GitHub Copilot · Azure CLI.
+Docker Compose (local reproducible) · GitHub Actions (CI) · GitHub Copilot.
 
 **Estructura (monorepo)**
 
@@ -88,20 +93,22 @@ TactiX/
 │   └── api/           # REST + SSE
 ├── frontend/src/features/   # match · analyst · fan · preferences
 ├── data/scenarios/    # escenarios sintéticos reproducibles (incluye el demo seed)
-├── infra/             # Azure (Bicep + Azure CLI)
+├── infra/             # runbook de despliegue agnóstico de cloud (Docker, cualquier host)
 ├── scripts/
 └── docs/              # interno, español
 ```
 
 **Notas sobre la propuesta:**
 
-1. **Azure Functions fuera; solo Container Apps.** La propuesta consolida en Container Apps
-   (scale-to-zero ya es serverless). Menos superficie que mantener arriba 3 semanas. Functions
-   queda opcional si la ingesta lo pide.
-2. **`data/scenarios/` = el *demo seed*** que marqué: ahí vive el guion plantado de *Ashford*.
+1. **Despliegue agnóstico de cloud.** La app es una imagen de contenedor que corre en cualquier
+   host (Vercel para el front; Render/Railway/VPS para el back + Postgres). Nada asume Azure ni
+   un modelo serverless concreto.
+2. **`data/scenarios/` = el *demo seed***: ahí vive el guion plantado de *Ashford*. En producto
+   es una fixture de demo/onboarding, no una muestra de análisis de cliente real (ver §3).
 3. **Frontend:** estado con **Zustand**, i18n con **react-i18next** (es/en).
-4. **Modelo de Foundry:** se elige al verificar disponibilidad/cuota/latencia en la cuenta; no
-   se entrena nada. Cliente de modelo intercambiable como respaldo.
+4. **Proveedor de modelo intercambiable.** El enjambre corre contra un contrato de cliente
+   neutral (MAF); el proveedor concreto (Foundry hoy; OpenAI/Anthropic/local después) se elige
+   por disponibilidad/cuota/latencia y entra detrás del mismo contrato. No se entrena nada.
 5. **Nombres sintéticos:** mantener los del README (*Ashford*, *Northbridge*, *Hartley*).
 
 ---
@@ -110,7 +117,7 @@ TactiX/
 
 ```
 Eventos sintéticos  ─►  Motor de métricas  ─►  Enjambre de agentes  ─►  Frontend
-   (Layer 1)              (Layer 2, código)       (Layer 3, MAF+Foundry)   (Layer 4)
+   (Layer 1)              (Layer 2, código)       (Layer 3, MAF+proveedor) (Layer 4)
    determinista          determinista             interpreta, no cuenta    analista/afición
 ```
 
@@ -166,11 +173,13 @@ resultado.
 ### Generador
 
 - **Determinista por seed** → reproducible y testeable.
-- **Demo seed (crítico, ya reflejado en `data/scenarios/`):** además del modo procedural, el
+- **Demo seed (ya reflejado en `data/scenarios/`):** además del modo procedural, el
   generador acepta un *guion plantado* que inyecta un patrón concreto en el historial y en el
   partido en vivo. Para el clímax: *Ashford* arrastra un patrón de "concede tras perder el
   balón en medio campo" en varios fixtures previos, y en el vivo vuelve a pasar y termina en
-  gol de *Hartley*. Sin este gancho, la frase clímax no tiene de dónde salir.
+  gol de *Hartley*. Sin este gancho, la frase clímax no tiene de dónde salir. En producto es la
+  **fixture de demo/onboarding** (muestra las capacidades), no una muestra de análisis de un
+  cliente real: cuando se despliegue como SaaS hay que encuadrarla como tal en la UI.
 - Media temporada previa (~10–14 jornadas) = suficiente para tabla, forma, head-to-head y
   tendencias por jugador con sustento real.
 
@@ -293,7 +302,9 @@ MatchContext {
 
 Las **métricas se actualizan por evento**, pero los **agentes se activan por ventanas de
 análisis o momentos relevantes** (un gol, un cambio de momentum, una ventana de ~5'), no en
-cada evento. Esto controla latencia y costo de Foundry y concentra el LLM donde aporta.
+cada evento. Esto controla latencia y costo del proveedor de modelo y concentra el LLM donde
+aporta. (En producción, además, la ruta de modelo necesita límites de rate/costo por usuario:
+ver §7, endurecimiento.)
 
 El estado del workflow usa **checkpoints** (para recuperar la ejecución) y, aparte, un
 **historial consultable** (contexto futbolístico para el Historian): son cosas distintas con
@@ -308,7 +319,8 @@ descriptiva. Cinco prompts en paralelo no lo logran: son jobs distintos con fuen
 
 Para **probarlo**, no solo afirmarlo: enviamos un *baseline de un solo agente* (un prompt
 monolítico sobre los mismos eventos) y lo comparamos lado a lado con la salida del enjambre.
-Esa comparación va en la evaluación (§7, día 6–7) y es munición directa para el criterio 5.
+Esa comparación es la evidencia de que el enjambre aporta algo que un solo agente no, y es
+material directo para la demo y el pitch del producto.
 
 ### Mecánica de discrepancia (real, no teatro)
 
@@ -327,7 +339,7 @@ recorrido no se rompe: sale parcial y lo dice.
 
 ---
 
-## 6. Layer 4 — Frontend (criterio 4 = 20%, no es relleno)
+## 6. Layer 4 — Frontend (pesa igual que el backend, no es relleno)
 
 - **Modo analista:** métricas densas, línea de tiempo de patrones, pass network, mapa de
   cancha en vivo, evidencia desglosable (clic en una afirmación → eventos que la sustentan).
@@ -343,68 +355,83 @@ recorrido no se rompe: sale parcial y lo dice.
 
 ---
 
-## 7. Plan de 8 días (paralelizable)
+## 7. Roadmap de producto (faseado)
 
-> Las capas bajas primero: si el universo y las métricas se atrasan, los agentes se quedan sin
-> materia prima. La UI mínima arranca el día 2 para que **siempre** haya algo demostrable.
+Lo construido (etapa hackathon) dejó las cuatro capas sólidas y testeadas offline. El roadmap de
+producto parte de ahí hacia un SaaS multiusuario desplegado. Prioridad: lo que desbloquea el
+valor principal (analista) y el camino a producción, antes que más features.
 
-| Día | Fecha | Hito |
-|---|---|---|
-| 1 | 20/10 (hoy) | Congelar este doc. Scaffold monorepo + CI. Definir **en código** los contratos: entidades, taxonomía de eventos y `MatchContext`. Esto desbloquea el trabajo en paralelo |
-| 2 | 21/10 | Generador de universo (clubes, jugadores, media temporada) + gancho de *demo seed*. Arranca motor de métricas (posesión, pass network, presión). Scaffold de frontend (Vite, i18n, routing, componente de cancha stub) |
-| 3 | 22/10 | Motor de métricas completo + tests con asserts. Reproductor de stream con reloj + API `/stream` (SSE). Frontend: línea de tiempo + mapa de cancha consumiendo el stream |
-| 4 | 23/10 | Agentes sobre MAF: Analyst + Historian con Foundry. Blackboard. Orchestrator fan-out/fan-in |
-| 5 | 24/10 | Narrator + Personalizer. Conflictos (desacuerdo de causa). Fallo del Historian → parcial. Salida multi-idioma |
-| 6 | 25/10 | Deploy serverless en Azure (Container Apps + Postgres + Foundry). Baseline de un solo agente para la comparación. Pulido de UX: dos modos, switch, procedencia del clímax |
-| 7 | 26/10 | Grabar el partido demo. QA punta a punta desde entorno limpio. Instrucciones de prueba. README final en inglés. Guion del video |
-| 8 | 27/10 | Grabar y editar video <2 min. **Entregar de día, no al filo de la 1:59 a. m.** Dejar la demo arriba (no apagar hasta el 10 de noviembre) |
+### Fase A — Hecho (base técnica)
 
-### Guion del video (<2 min) — arco "construir hacia el párrafo"
+- Universo sintético determinista, motor de métricas con tests, enjambre de cinco agentes con
+  blackboard/handoffs/recuperación, frontend analista+afición, recording reproducible, CI.
+- Orquestación con **cliente de modelo inyectable** (ya probada contra un cliente MAF no-Foundry).
+- Docs y despliegue **agnósticos de cloud** (de-Azure completo).
 
-| Tramo | Qué se ve |
-|---|---|
-| 0:00–0:20 | **El problema.** Salida típica ("Gol de Hartley, 62'") vs lo que promete TactiX. Gancho corto |
-| 0:20–1:10 | **El clímax.** Partido en vivo con el mapa de cancha; el enjambre arma el párrafo contextual y se muestra la procedencia: qué aportó Analyst, Historian y Narrator, y de qué eventos sale |
-| 1:10–1:40 | **Lo multi-agente.** La discrepancia honesta Analyst vs Historian con su evidencia; luego tumbamos al Historian y el reporte sale parcial y etiquetado (recuperación) |
-| 1:40–2:00 | **Personalización.** Switch analista↔afición y es/en sobre el mismo momento; cierre con el baseline de un solo agente al lado para rematar la tesis |
+### Fase B — Desbloquear agentes en vivo + abstracción de proveedor
 
-Todo lo demostrable primero: lo que no entra en estos 2 minutos no manda sobre lo que sí.
+- **Contrato `ModelProvider`** explícito (context-manager de cliente + `validate()` +
+  `invocation_limits()`); renombrar `agents/foundry.py` → `agents/runtime.py` dejando
+  `run_specialists` neutral; mover la fábrica Foundry a `agents/providers/foundry.py`.
+- `TACTIX_MODEL_PROVIDER` + settings namespaced por proveedor; eliminar el `foundry_api_key`
+  muerto. **No implementar un adaptador nuevo todavía** — solo dejar el contrato listo.
+- Envolver los accesos a internals de MAF (`client.client.*`, `function_invocation_configuration`)
+  para que un cliente no-MAF-nativo no rompa.
+
+### Fase C — Preparación para SaaS (la brecha grande)
+
+- **Auth + identidad + tenancy.** Hoy no existe: toda sesión es global, legible y borrable por
+  cualquiera. Añadir usuarios, propiedad de sesión y aislamiento por usuario en cada ruta.
+- **Modelo de sesión del producto:** privado por analista por defecto; co-viewing como opción
+  explícita (no el default actual de "los controles afectan a todos").
+- **Persistencia real.** Conectar la capa de BD a la API (hoy la liga se genera en memoria y la
+  BD no se usa en runtime); persistir ejecuciones de análisis para que un analista las retome.
+  Sacar el estado de sesión de la memoria de un worker (Redis/BD) o comprometerse a single-worker
+  con routing pegajoso y documentarlo.
+- **Logging/observabilidad.** Hoy es cero. Logging estructurado + request IDs + un canal de
+  error interno que preserve diagnóstico sin filtrar secretos (los errores de proveedor se
+  colapsan a `provider_error` a propósito; eso deja al operador ciego sin logs).
+- **Límites de costo/rate por usuario** en la ruta `/analyze`.
+- **Frontend de SaaS:** router, pantalla de login, selección/listado de partidos (hoy el partido
+  `ashford-demo-v1` está hardcodeado en toda la pila), desacoplar los tipos del `fixture.json`.
+
+### Fase D — Despliegue
+
+- Imagen de contenedor en el host elegido (recomendado: Vercel front + Render/Railway back +
+  Postgres). Pipeline de CD. Gestión de secretos por entorno.
 
 ---
 
-## 8. Mapa a la rúbrica (5 × 20%)
-
-| Criterio | Dónde lo ganamos |
-|---|---|
-| 1. Implementación tecnológica | MAF + Foundry + Azure serverless bien hechos; código estructurado, tests deterministas, README claro |
-| 2. Diseño agéntico e innovación | Fan-out/fan-in sobre blackboard, discrepancia honesta con reconciliación, degradación elegante |
-| 3. Impacto y aplicabilidad | Problema real (explicar *por qué* importa un momento); deploy serverless real que queda arriba |
-| 4. UX y presentación | Dos modos genuinos, mapa de cancha, switch e idioma en vivo, clímax con procedencia; balance front/back |
-| 5. Cumplimiento de categoría | Roles distintos, estado compartido + handoffs, recuperación de fallos, resultado que un solo agente no lograría |
-
----
-
-## 9. Riesgos y mitigaciones
+## 8. Riesgos y mitigaciones
 
 | Riesgo | Mitigación |
 |---|---|
-| Foundry con cuota/latencia en la demo | Cliente de modelo intercambiable; el motor determinista da una base sin LLM |
+| Agentes en vivo bloqueados por cuota/latencia del proveedor | Contrato de proveedor intercambiable; el motor determinista da una base de valor sin LLM |
+| Sin fuente de datos reales | El universo sintético **es** el producto hoy; ingerir datos reales es decisión futura con tema de licencias |
 | "Coordenadas + posesiones" es lo más caro de simular | Máquina de estados simple y determinista; afinar con reglas, no con ML |
-| Datos futbolísticos ricos = más simulación/métricas | Fasear: primero el catálogo núcleo (posesión, pase, tiro, presión), luego las avanzadas (xG race, ratings, físico). El núcleo ya alcanza para una demo sólida |
-| "UX al final" se come el tiempo | UI mínima en paralelo desde el día 2; siempre hay algo demostrable |
-| Entrega al filo de la 1:59 a. m. | Cerrar el día 27 de día, con margen |
-| Demo se cae durante evaluación | Serverless scale-to-zero + run grabado como respaldo del video; no apagar hasta 10/11 |
+| Datos futbolísticos ricos = más simulación/métricas | Faseado: primero el catálogo núcleo, luego las avanzadas (xG race, ratings, físico) |
+| El salto a SaaS (auth/tenancy/persistencia) es grande | Faseado en §7-C, priorizando el analista; el acoplamiento a proveedor es estrecho y contenido |
+| Costo del modelo en producción | Activación por momentos (no por evento) + límites de rate/costo por usuario |
 
 ---
 
-## 10. Puntos abiertos — resueltos (reunión del 20/10)
+## 9. Puntos abiertos
+
+**Decididos:**
 
 - **Estado del frontend:** Zustand. **i18n:** react-i18next (es/en). *(§1)*
 - **Personalización:** 4 ejes — idioma, modo, club favorito, jugador foco. *(§6)*
-- **Guion del video:** arco "construir hacia el párrafo". *(§7)*
-- **Licencia:** MIT (archivo `LICENSE` + README).
+- **Modelo de sesión:** privado por defecto + co-viewing opcional.
+- **Proveedor de modelo:** contrato intercambiable; sin adaptador nuevo concreto por ahora.
+- **Despliegue:** agnóstico de cloud (recomendado Vercel + Render/Railway).
+- **Licencia:** MIT.
 
-**Me toca cerrarlos al codear (no bloquean, default documentado):**
+**Por decidir (producto/negocio, no bloquean el código):**
+
+- Fuente de datos reales y sus licencias (si alguna vez se persigue).
+- Qué adaptador de proveedor implementar primero cuando toque correr agentes en vivo.
+- Modelo de monetización del SaaS (planes, límites, billing).
+
+**Por cerrar al codear (default documentado):**
 
 - Parámetros de los modelos xG/xT/xA-like (pesos por zona) y umbral del `pass network`.
-- Esquema exacto de la base de datos → modelos SQLAlchemy + primera migración Alembic (día 1).
