@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/Gxlman10/TactiX-AI-Tactical-Swarm-Intelligence/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/Gxlman10/TactiX-AI-Tactical-Swarm-Intelligence/actions/workflows/ci.yml)
 
-Built for the **Microsoft × Premier League Inside the Game Hackathon 2026**, targeting **Best Multi-Agent System**.
+A tactical-analysis product for analysts: it turns a stream of match events into explainable, evidence-backed tactical intelligence and contextual narration. It began as an entry for the Microsoft × Premier League *Inside the Game* Hackathon 2026 and now continues as a product.
 
 TactiX connects a replayable synthetic match to an evidence explorer and a specialist agent workflow. Inspect the actions behind a metric, follow a transition across the pitch, and compare it with previous fixtures.
 
@@ -144,10 +144,10 @@ The backend ships as a container image (built and published to GHCR by CI) and r
 
 ## Scope and integrity
 
-- Clubs, rosters, fixtures and events are fictional. There is no real match data or footage. Homepage athletes are generated artwork, not roster identities. The competition logo identifies the hackathon context, not a fictional club.
+- Clubs, rosters, fixtures and events are fictional. There is no real match data or footage. Homepage athletes are generated artwork, not roster identities. A competition logo remains from the project's hackathon origin; it marks that context, not a fictional club, and is slated for removal as hackathon branding is retired.
 - The Ashford climax is an authored, event-backed overlay, not an emergent discovery or live model output.
 - Synthetic xG is an uncalibrated proxy. Pitch views show recorded actions and observed pass locations, not continuous tracking.
 - Sessions are shared, temporary and held in one worker's memory. Backend restarts invalidate them; replay needs no persisted database state.
 - Keep credentials, `.env` and generated live outputs out of Git. The hash-verified recording is a deliberate exception to routine generated-data exclusion.
 
-**License:** [MIT](LICENSE). **Team:** TactiX, Microsoft × Premier League Hackathon 2026.
+**License:** [MIT](LICENSE). **Project:** TactiX — a tactical-analysis product, originally built for the Microsoft × Premier League *Inside the Game* Hackathon 2026.
