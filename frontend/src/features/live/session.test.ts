@@ -429,3 +429,18 @@ it("discards analysis that completes after a seek", async () => {
   expect(client.getSnapshot().report).toBeNull();
   expect(client.getSnapshot().analyzing).toBe(false);
 });
+
+it("marks a silent paused stream disconnected when metric reads lose the network", async () => {
+  await client.start();
+  holdMetrics = async () => {
+    throw new TypeError("Failed to fetch");
+  };
+  const confirmed = client.getSnapshot().events;
+  await vi.advanceTimersByTimeAsync(1000);
+  expect(client.getSnapshot().connection).toBe("reconnecting");
+  expect(client.getSnapshot().events).toEqual(confirmed);
+  expect(sources[0].closed).toBe(true);
+  holdMetrics = null;
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(client.getSnapshot().connection).toBe("connected");
+});

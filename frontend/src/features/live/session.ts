@@ -440,6 +440,11 @@ export class LiveSession {
       if (!this.current(generation)) return;
       if (error instanceof ApiError && error.status === 404)
         this.failure(error, generation);
+      else if (
+        error instanceof TypeError ||
+        (error instanceof DOMException && error.name === "TimeoutError")
+      )
+        this.reconnect(error, generation);
       else if (!(
         error instanceof ApiError && [409, 422].includes(error.status)
       ))

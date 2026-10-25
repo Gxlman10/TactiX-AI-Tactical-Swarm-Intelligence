@@ -10,6 +10,7 @@ import {
   ChartLineUp,
   Crosshair,
   Globe,
+  House,
   Pause,
   Play,
   SoccerBall,
@@ -146,6 +147,9 @@ export default function App({
         <div className="main-shell">
           <header className="topbar">
             <div className="breadcrumb">
+              <a className="mobile-home" href="/" aria-label="TactiX home">
+                <House size={20} />
+              </a>
               {t("match")}
               <span>/</span>
               <strong>{t("studio")}</strong>

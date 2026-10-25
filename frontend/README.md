@@ -124,3 +124,33 @@ The connection screen now sits inside a concise bilingual introduction: purpose,
 The supplied competition logo is displayed as hackathon context, not as a fictional club badge. `public/images/tactix-athletes.webp` is an original generated editorial asset featuring fictional, unbranded athletes; the portraits do not identify roster players. It is compressed to WebP for delivery. No real-player imagery from the visual reference is used. Homepage moment counts come from the exported backend fixture. Agent descriptions explain the architecture and explicitly state that live narration needs a configured model.
 
 Navigation has a mobile menu, visible keyboard focus, section anchors and a skip link. Motion respects reduced-motion preferences. The primary action leads to the real connection panel, with loading/errors and local rehearsal still available.
+
+## Browser demo regression suite
+
+Run from `frontend/` after installing the project dependencies and Chromium:
+
+```sh
+node node_modules/@playwright/test/cli.js install chromium
+npm run test:e2e
+```
+
+The command type-checks the browser tests, builds the production frontend with its API URL fixed to `http://127.0.0.1:8018`, and starts dedicated local Uvicorn and Vite preview processes on ports 8018 and 4178. Node and uv must be available. Ports must be free: the suite refuses to borrow an existing server. No Azure, PostgreSQL or Foundry credentials are needed, and no analysis request is fabricated. The app's in-memory synthetic session API is real.
+
+Four scenarios run in desktop Chromium (1280 × 800) and mobile Chromium (390 × 844):
+
+- Home → create demo → play/pause → inclusive 62:00 goal → keyboard rewind to 61:59 → inspect metric and historical evidence → Fan/Analyst → Spanish. Assertions cover server score, hidden future context and retained cutoff.
+- Browser offline/online recovery with the last confirmed cut, disabled controls and unchanged visible action list.
+- Delete the owned session through the API, verify terminal UI and create another demo.
+- Loaded image assets, no horizontal overflow, mobile menu, specialist selection, local rehearsal and return home.
+
+Each test gets a fresh browser context, checks unhandled page exceptions and deletes only the sessions it creates. Playwright stops the owned web servers when the run ends. There are no fixed sleeps or screenshot pixel baselines; assertions wait for the actual UI or API condition. Retries are disabled so a flaky first attempt cannot silently pass.
+
+Failures retain screenshots, video, event traces and an HTML report in ignored `test-results/` and `playwright-report/` directories. Successful climax screenshots are attached to the report. Inspect results with:
+
+```sh
+node node_modules/@playwright/test/cli.js show-report
+```
+
+To run one viewport: `npm run test:e2e -- --project=mobile`. CI runs the suite in its own `demo-e2e` job against a clean dependency install and uploads diagnostics for seven days. This validates the deterministic demo journey; real model inference remains a separate Foundry smoke test. Configuration follows the [Playwright test configuration](https://playwright.dev/docs/test-configuration) API.
+
+The offline test exposed a paused stream that could remain open after networking failed. A failed/timed-out metric fetch now enters reconnection while retaining the confirmed view, rather than continuing to label the session connected; a unit regression covers this case too.
