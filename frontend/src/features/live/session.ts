@@ -1,3 +1,4 @@
+import { ReplayStream, type ReplaySource } from "./stream";
 import type {
   HistoricalMatch,
   HistoricalArtifact,
@@ -36,6 +37,8 @@ export interface LiveState {
   error: string;
   report: MatchReportRun | null;
   analyzing: boolean;
+  retryAt: number | null;
+  retryAttempt: number;
 }
 const initial = (): LiveState => ({
   connection: "idle",
@@ -53,6 +56,8 @@ const initial = (): LiveState => ({
   error: "",
   report: null,
   analyzing: false,
+  retryAt: null,
+  retryAttempt: 0,
 });
 
 /** Owns one browser subscription, not the shared match clock. */
@@ -61,7 +66,7 @@ export class LiveSession {
   private listeners = new Set<() => void>();
   private generation = 0;
   private reconstruction = 0;
-  private source: EventSource | null = null;
+  private source: ReplaySource | null = null;
   private timer: ReturnType<typeof setInterval> | undefined;
   private retry: ReturnType<typeof setTimeout> | undefined;
   private abort = new AbortController();
@@ -69,9 +74,14 @@ export class LiveSession {
   private refreshing = false;
   private controlPending = false;
   private following = true;
+  private resumeToken: string | undefined;
+  private recovering = false;
   constructor(
     private api = new MatchApi(),
-    private sourceFactory = (url: string) => new EventSource(url),
+    private sourceFactory: (url: string, token?: string) => ReplaySource = (
+      url,
+      token,
+    ) => new ReplayStream(url, token),
   ) {}
   subscribe = (listener: () => void) => {
     this.listeners.add(listener);
@@ -100,6 +110,8 @@ export class LiveSession {
     this.generation++;
     this.reconstruction++;
     this.abort.abort();
+    this.resumeToken = undefined;
+    this.recovering = false;
     this.source?.close();
     this.source = null;
     clearInterval(this.timer);
@@ -179,8 +191,10 @@ export class LiveSession {
   private failure(error: unknown, generation: number) {
     if (!this.current(generation)) return;
     const closed = error instanceof ApiError && error.status === 404;
+    clearTimeout(this.retry);
     this.set({
       connection: closed ? "closed" : "error",
+      retryAt: null,
       busy: false,
       error: error instanceof Error ? error.message : "Connection failed",
     });
@@ -207,9 +221,13 @@ export class LiveSession {
       return;
     const reset = update.revision > info.state.revision;
     if (!reset && update.position_seconds < info.state.position_seconds) return;
-    if (reset) this.following = true;
+    if (reset) {
+      this.following = true;
+      this.resumeToken = undefined;
+    }
     if (reset)
       this.set({
+        report: null,
         events: [],
         metrics: null,
         context: null,
@@ -273,6 +291,7 @@ export class LiveSession {
     }, 1000);
     const source = this.sourceFactory(
       this.api.url(`/sessions/${info.session_id}/stream`),
+      this.resumeToken,
     );
     this.source = source;
     const receive = (event: Event) => {
@@ -286,7 +305,21 @@ export class LiveSession {
         )
           return;
         this.apply(update);
-        this.set({ connection: "connected" });
+        const token = (event as MessageEvent<string>).lastEventId;
+        const parts = token?.split(":");
+        if (
+          parts?.length === 3 &&
+          parts[0] === info.session_id &&
+          Number(parts[1]) === update.revision &&
+          /^\d+$/.test(parts[2])
+        )
+          this.resumeToken = token;
+        this.set({
+          connection: "connected",
+          error: "",
+          retryAt: null,
+          retryAttempt: 0,
+        });
         if (update.revision > oldRevision)
           void this.rebuild(generation).catch((error) =>
             this.reconnect(error, generation),
@@ -306,24 +339,41 @@ export class LiveSession {
       if (this.current(generation) && this.source === source) {
         source.close();
         clearInterval(this.timer);
-        this.set({ connection: "closed", busy: false, error: "" });
+        this.set({
+          connection: "closed",
+          busy: false,
+          error: "",
+          retryAt: null,
+        });
       }
     });
-    source.onerror = () => {
+    source.onerror = (error) => {
       if (this.source === source)
-        this.reconnect(new Error("Stream disconnected"), generation);
+        this.reconnect(error ?? new Error("Stream disconnected"), generation);
     };
   }
   private reconnect(error: unknown, generation: number) {
     if (!this.current(generation)) return;
+    if (error instanceof ApiError && error.status === 404) {
+      this.failure(error, generation);
+      return;
+    }
+    if (error instanceof ApiError && error.status === 409)
+      this.resumeToken = undefined;
     this.source?.close();
     this.source = null;
+    clearInterval(this.timer);
     clearTimeout(this.retry);
+    const delay = Math.max(
+      Math.min(30, 5 * 2 ** Math.min(3, this.state.retryAttempt)),
+      error instanceof ApiError ? error.retryAfter : 0,
+    );
     this.set({
+      retryAt: Date.now() + delay * 1000,
+      retryAttempt: this.state.retryAttempt + 1,
       connection: "reconnecting",
       error: error instanceof Error ? error.message : "Stream disconnected",
     });
-    const delay = error instanceof ApiError ? Math.max(5, error.retryAfter) : 5;
     this.retry = setTimeout(() => {
       void this.recover(generation);
     }, delay * 1000);
@@ -333,11 +383,13 @@ export class LiveSession {
     void this.recover(this.generation);
   };
   private async recover(generation: number) {
-    if (!this.state.info || !this.current(generation)) return;
+    if (!this.state.info || !this.current(generation) || this.recovering)
+      return;
+    this.recovering = true;
+    this.set({ retryAt: null });
     try {
-      const info = await this.api.session(
-        this.state.info.session_id,
-        this.abort.signal,
+      const info = await this.get<SessionInfo>(
+        `/sessions/${this.state.info.session_id}`,
       );
       if (!this.current(generation)) return;
       this.apply(info.state);
@@ -349,6 +401,8 @@ export class LiveSession {
       if (error instanceof ApiError && error.status === 404)
         this.failure(error, generation);
       else this.reconnect(error, generation);
+    } finally {
+      if (this.current(generation)) this.recovering = false;
     }
   }
   private async refresh(generation: number) {
@@ -433,13 +487,20 @@ export class LiveSession {
   async analyze() {
     if (!this.state.info || this.state.analyzing) return;
     const generation = this.generation;
+    const revision = this.state.info.state.revision;
     this.set({ analyzing: true, error: "" });
     try {
       const report = await this.api.analyze(this.state.info.session_id);
-      if (this.current(generation)) this.set({ report });
+      if (
+        this.current(generation) &&
+        this.state.info?.state.revision === revision
+      )
+        this.set({ report });
     } catch (error) {
       if (this.current(generation))
-        this.set({ error: error instanceof Error ? error.message : "Analysis failed" });
+        this.set({
+          error: error instanceof Error ? error.message : "Analysis failed",
+        });
     } finally {
       if (this.current(generation)) this.set({ analyzing: false });
     }
