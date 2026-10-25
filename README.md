@@ -77,6 +77,8 @@ See [workflow stages](backend/WORKFLOW.md), [agent boundaries](backend/SWARM.md)
 
 ## Optional live inference
 
+Live agents need a model provider. Microsoft Foundry is the adapter wired today; another provider can be placed behind the same swarm contracts. None of the steps below are required to run the deterministic demo above.
+
 Install the agents extra as above. Configure an authorized Foundry project endpoint and deployment name in the ignored root `.env` or environment:
 
 ```dotenv
@@ -128,7 +130,7 @@ The browser command type-checks the app/tests, builds production assets, starts 
 
 ## Deployment and documentation
 
-The backend is deployed to Azure Container Apps with PostgreSQL Flexible Server. Its [health endpoint](https://tactix-backend.blackcliff-8260e62c.brazilsouth.azurecontainerapps.io/health) is separate from model readiness. The frontend has a Vite/nginx container recipe. Public frontend hosting, Foundry signoff and complete deployment automation remain separate delivery gates; no public frontend URL or uptime guarantee is claimed here.
+The backend ships as a container image (built and published to GHCR by CI) and runs on any container host — a VPS, Render, Fly.io, Railway, Cloud Run or Azure Container Apps — with an optional managed PostgreSQL. The health endpoint is separate from model readiness. The frontend has a Vite/nginx container recipe. Public hosting, model-provider signoff and complete deployment automation remain separate delivery gates; no public URL or uptime guarantee is claimed here.
 
 | Topic | Guide |
 |---|---|
@@ -138,7 +140,7 @@ The backend is deployed to Azure Container Apps with PostgreSQL Flexible Server.
 | Full offline recording | [Recording](data/recordings/ashford-demo-v1/README.md) |
 | Synthetic league and historical ledger | [Universe](backend/UNIVERSE.md), [history](backend/HISTORY.md) |
 | Computed metrics | [Core](backend/METRICS.md), [advanced](backend/ADVANCED_METRICS.md) |
-| Azure configuration | [Deployment](infra/DEPLOY.md) |
+| Container deployment (any host) | [Deployment](infra/DEPLOY.md) |
 
 ## Scope and integrity
 

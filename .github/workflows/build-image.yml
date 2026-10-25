@@ -1,10 +1,9 @@
 name: Build backend image
 
 # Builds the backend container image on GitHub's runners and publishes it to the GitHub
-# Container Registry (GHCR). This needs no local Docker and no ACR Tasks, so it works on
-# subscriptions (e.g. Azure for Students) that disallow server-side ACR builds. Azure
-# Container Apps then pulls the published image — make the GHCR package public once so no
-# pull credentials are needed (see infra/DEPLOY.md).
+# Container Registry (GHCR). This needs no local Docker, so any container host can pull the
+# published image to deploy it. Make the GHCR package public once so no pull credentials are
+# needed (see infra/DEPLOY.md).
 
 on:
   push:

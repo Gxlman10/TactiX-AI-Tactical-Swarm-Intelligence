@@ -1,19 +1,13 @@
 # Infra
 
-Azure deployment (Bicep + Azure CLI): the backend on **Azure Container Apps** (scale-to-zero
-capable) with **Azure Database for PostgreSQL** Flexible Server, and the **Microsoft Foundry**
-model for the live agents.
+TactiX ships as plain Docker images (backend + frontend), so it deploys to **any container
+host** — a VPS, Render, Fly.io, Railway, Cloud Run, App Runner, Azure Container Apps, etc. It
+is not tied to a specific cloud, and needs neither a managed database nor a model provider to
+run the demo.
 
-- `main.bicep` — the resource-group-scoped deployment (Log Analytics, Container Apps
-  environment, backend Container App, PostgreSQL Flexible B1ms). The registry is optional, so
-  it can pull a public image with no credentials.
-- `deploy.sh` — one-shot deploy. With `TACTIX_BACKEND_IMAGE` set to a public image it just
-  deploys the Bicep (no Docker, no ACR); otherwise it falls back to an `az acr build`.
-- `DEPLOY.md` — the runbook: prerequisites, the GHCR image flow, cost notes, migrations,
-  enabling Foundry, teardown.
+- `DEPLOY.md` — the deployment runbook: images, running the containers anywhere, configuration,
+  and the optional database and model provider.
 
 The backend image is built by `.github/workflows/build-image.yml` (GitHub Actions → GHCR),
-which needs no local Docker and no ACR Tasks — the path that works on Azure for Students.
-
-> **Starting point, not yet validated against a live subscription.** Run `deploy.sh` once and
-> iterate. See `DEPLOY.md`.
+which needs no local Docker. The `Dockerfile`s live in `backend/` and `frontend/`; `compose.yaml`
+at the repo root runs the backend + PostgreSQL locally.
