@@ -116,3 +116,11 @@ This creates and deletes its own synthetic session, checks cuts immediately befo
 Reconnecting keeps the server-owned clock untouched: another viewer may continue playback. The UI labels its retained view as stale until reconstruction succeeds. Metrics polling stops with the disconnected stream. Recovery attempts are bounded by the HTTP read timeout and serialized. A seek invalidates the narrative report and late analysis replies cannot populate another revision. No automatic retry of POST analysis or playback controls is performed.
 
 Tests cover transport framing, cursor headers, 404/409/503, Retry-After/SSE retry, EOF, disposal, revision changes, retained data, increasing retry delays, terminal sessions, delayed analysis and EN/ES recovery controls. This does not provide durable sessions: a backend restart still requires a new demo session.
+
+## Editorial homepage
+
+The connection screen now sits inside a concise bilingual introduction: purpose, specialist roles, the evidence-backed Ashford moment and the match studio entry. The existing server/local workflows are unchanged; the TactiX brand link returns to the homepage. The studio shares the midnight blue palette while retaining semantic evidence colors.
+
+The supplied competition logo is displayed as hackathon context, not as a fictional club badge. `public/images/tactix-athletes.webp` is an original generated editorial asset featuring fictional, unbranded athletes; the portraits do not identify roster players. It is compressed to WebP for delivery. No real-player imagery from the visual reference is used. Homepage moment counts come from the exported backend fixture. Agent descriptions explain the architecture and explicitly state that live narration needs a configured model.
+
+Navigation has a mobile menu, visible keyboard focus, section anchors and a skip link. Motion respects reduced-motion preferences. The primary action leads to the real connection panel, with loading/errors and local rehearsal still available.

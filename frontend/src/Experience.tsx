@@ -1,3 +1,4 @@
+import { Home } from "./Home";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Studio from "./App";
 import {
@@ -33,6 +34,16 @@ function LiveStudio({ onLocal }: { onLocal: () => void }) {
     controller.subscribe,
     controller.getSnapshot,
   );
+  const ready = Boolean(data.info && data.teams.length === 2);
+  useEffect(() => {
+    if (!ready) return;
+    window.history.replaceState(
+      {},
+      "",
+      window.location.pathname + window.location.search,
+    );
+    window.scrollTo({ top: 0 });
+  }, [ready]);
   useEffect(() => {
     window.addEventListener("pagehide", controller.leave);
     return () => {
@@ -44,14 +55,7 @@ function LiveStudio({ onLocal }: { onLocal: () => void }) {
     <SessionPanel data={data} controller={controller} onLocal={onLocal} />
   );
   if (!data.info || data.teams.length !== 2)
-    return (
-      <main className="session-launcher">
-        <a className="brand" href="/">
-          TactiX<span>✳</span>
-        </a>
-        {panel}
-      </main>
-    );
+    return <Home sessionPanel={panel} />;
   const state = data.info.state;
   return (
     <Studio

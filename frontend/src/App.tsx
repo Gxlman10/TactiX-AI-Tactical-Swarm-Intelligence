@@ -108,7 +108,7 @@ export default function App({
       </a>
       <div className="app-layout">
         <aside className="sidebar">
-          <a href="#main" className="brand">
+          <a href="/" className="brand" aria-label="TactiX home">
             TactiX<span>✳</span>
           </a>
           <p className="workspace">{t("workspace")}</p>
